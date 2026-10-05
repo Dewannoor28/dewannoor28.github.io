@@ -1,0 +1,25 @@
+Dewan Nafiul Islam Noor Portfolio — Responsive QA
+
+Responsive breakpoints included:
+- <= 980px : tablet / compact desktop
+- <= 720px : mobile / portrait tablet
+- <= 480px : standard phones
+- <= 360px : small phones
+- landscape height <= 520px : short-screen handling
+- pointer: coarse : touch-specific hover cleanup
+
+Checks completed:
+- viewport-fit=cover added to all HTML pages
+- relative local paths retained for GitHub Pages
+- HTML local href/src references: 0 missing
+- data.js local assets: 0 missing
+- JavaScript syntax check: passed
+- responsive mobile menu and outside-click close added
+- touch target sizing improved
+- hero full-name overflow handling added
+- terminal/code blocks made scroll-safe
+- command palette converted to mobile bottom sheet
+- project/publication cards optimized for narrow screens
+- gallery and image modal optimized for phone view
+- safe-area support added for notched phones
+- mobile canvas node count reduced for performance

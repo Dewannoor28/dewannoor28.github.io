@@ -1,0 +1,9 @@
+Dewan Noor Portfolio v7 — requested fixes
+
+1. BAUET Debating Society removed completely from leadership/data/rendering.
+2. Added Byte Capsule experience: Jr. Mobile Application Security Analyst (Intern), Remote, 03 Oct 2026–05 Dec 2026. No paid/unpaid/stipend language included.
+3. Font system changed to Outfit + Inter + JetBrains Mono.
+4. Animation system changed from slide/translate reveals to blur + opacity + scale + mask reveals.
+5. Persistent visible motion added: moving grid pulse, animated card aura, project sheen, JSON scan/glow, hero name reveal, timeline pulse, code canvas, orbit, typing and marquee.
+6. Asset query versions updated from v6 to v7 to avoid stale GitHub Pages/browser cache.
+7. Education remains separate from Experience.
