@@ -1,4 +1,4 @@
-# Dewan Nafiul Islam Noor — PORTFOLIO_OS v4
+# Dewan Nafiul Islam Noor
 
 ## Visual update
 - Default background is now white / soft pastel, not black.
@@ -9,7 +9,7 @@
 - Stronger motion: boot intro, animated name reveal, moving grid and gradient blobs, live typing, floating portrait/code card, marquee, counters, scroll reveals, timeline pulse, canvas network and hover interactions.
 - All existing multi-page navigation and connected project/publication detail pages are preserved.
 
-# Dewan Noor — PORTFOLIO_OS
+# Dewan Noor — PORTFOLIO
 
 A multi-page, GitHub Pages-ready portfolio for **Dewan Nafiul Islam Noor**.
 
@@ -69,14 +69,12 @@ Recommended quick checks after publishing:
 - Test both portrait and landscape orientation
 
 
-## v7 fixes
+
 - Fixed STACK.JSON / Technical range desktop overflow.
 - Experience and Education are now separate routes (`experience.html`, `education.html`).
 - Added stronger visible scroll/card/terminal motion while keeping reduced-motion support.
 - Updated command palette and terminal commands to include Education.
 
-
-## v8 interaction update
 - Social profiles now render with recognizable icons and animated hover/click feedback.
 - Desktop homepage uses smart section-by-section wheel scrolling with an animated section rail.
 - Tall sections remain naturally scrollable so content is never skipped.
