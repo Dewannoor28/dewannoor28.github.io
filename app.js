@@ -145,13 +145,22 @@
     heroName.classList.add('is-typing');
 
     for (let w = 0; w < words.length; w++) {
-      const word = words[w];
-      for (const ch of word) {
-        appendTypedChar(heroName, ch, w === words.length - 1);
+      const wordWrap = document.createElement('span');
+      wordWrap.className = 'typed-name-word' + (w === words.length - 1 ? ' typed-name-accent' : '');
+      heroName.append(wordWrap);
+
+      for (const ch of words[w]) {
+        appendTypedChar(wordWrap, ch, w === words.length - 1);
         await sleep(72);
       }
+
+      if (w === 1) {
+        const br = document.createElement('br');
+        br.className = 'mobile-name-break';
+        heroName.append(br);
+      }
       if (w < words.length - 1) {
-        heroName.append(document.createTextNode('\u00A0'));
+        heroName.append(document.createTextNode(' '));
         await sleep(150);
       }
     }
