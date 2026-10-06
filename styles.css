@@ -1450,3 +1450,37 @@ body[data-page="home"] .marquee{
     opacity:1!important;transform:none!important;filter:none!important;animation:none!important;
   }
 }
+
+
+/* ==============================================================
+   v29 — MOBILE NAME WRAPPING
+   Desktop stays one line; mobile uses two intentional lines.
+   ============================================================== */
+body[data-page="home"] .typed-name-word,
+body[data-page="home"] .name-word{
+  display:inline-block!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+body[data-page="home"] .mobile-name-break{display:none}
+body[data-page="home"] .typed-name-accent,
+body[data-page="home"] .typed-name-word .typed-accent{color:#4d72ee!important}
+
+@media(max-width:819px){
+  body[data-page="home"] .kinetic-name{
+    display:block!important;
+    white-space:normal!important;
+    word-break:normal!important;
+    overflow-wrap:normal!important;
+    font-size:clamp(2.25rem,9.8vw,3.8rem)!important;
+    line-height:.98!important;
+    letter-spacing:-.055em!important;
+  }
+  body[data-page="home"] .mobile-name-break{display:block!important}
+}
+@media(max-width:420px){
+  body[data-page="home"] .kinetic-name{
+    font-size:clamp(2rem,9.5vw,3rem)!important;
+  }
+}
