@@ -971,3 +971,47 @@ img{max-width:100%;height:auto}
 @media(max-width:650px){.education-card{min-height:0}.photo-reel{mask-image:none;-webkit-mask-image:none}.photo-reel-track{gap:12px;animation-duration:58s}.photo-reel-card{width:min(82vw,315px);border-radius:16px}.photo-reel-card figcaption{font-size:.62rem;padding:8px 9px}.gallery-item img,.media-card img{min-height:190px;object-fit:cover}}
 @media(max-width:390px){.photo-reel-card{width:84vw}.brand-text{display:none}}
 @media(prefers-reduced-motion:reduce){.photo-reel-track{animation:none;overflow-x:auto}.photo-reel{overflow-x:auto}.photo-reel-track .photo-reel-card:nth-child(n+24){display:none}}
+
+
+/* ==============================================================
+   v17 — RESILIENT PROGRESSIVE ENHANCEMENT
+   Content is visible by default; animation can never leave sections blank.
+   ============================================================== */
+.reveal{opacity:1!important;transform:none!important;filter:none!important}
+.reveal.visible{animation:v17Reveal .68s cubic-bezier(.18,.78,.22,1) both}
+@keyframes v17Reveal{from{opacity:.18;transform:translateY(18px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+
+.stagger>*{opacity:1!important;transform:none!important;filter:none!important}
+.stagger.visible>*{animation:v17Stagger .58s cubic-bezier(.18,.78,.22,1) both!important}
+.stagger.visible>*:nth-child(2){animation-delay:.06s!important}
+.stagger.visible>*:nth-child(3){animation-delay:.12s!important}
+.stagger.visible>*:nth-child(4){animation-delay:.18s!important}
+.stagger.visible>*:nth-child(5){animation-delay:.24s!important}
+.stagger.visible>*:nth-child(6){animation-delay:.30s!important}
+@keyframes v17Stagger{from{opacity:.15;transform:translateY(16px) scale(.985);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+
+.motion-ready{opacity:1!important;transform:none!important;filter:none!important}
+.motion-ready.motion-in{animation:v17Motion .62s cubic-bezier(.18,.78,.22,1) var(--motion-delay,0ms) both!important}
+@keyframes v17Motion{from{opacity:.2;transform:translateY(12px) scale(.985);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+
+.education-grid,.leadership-grid,.achievement-grid{align-items:stretch}
+.leadership-grid .media-card,.achievement-grid .media-card,.education-grid .media-card{height:100%}
+.leadership-grid .media-card img,.achievement-grid .media-card img{background:var(--panel2)}
+.gallery-item{min-height:240px}
+.gallery-item img{background:var(--panel2)}
+.photo-reel-track:empty,.journey-strip:empty,.gallery:empty,.education-grid:empty,.leadership-grid:empty,.achievement-grid:empty{min-height:120px;background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px dashed var(--line);border-radius:18px}
+
+@media(max-width:980px){
+  .leadership-grid,.achievement-grid,.education-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .leadership-grid,.achievement-grid,.education-grid{grid-template-columns:1fr}
+  .section{padding:78px 0}
+  .section-head{align-items:flex-start;flex-direction:column;margin-bottom:32px}
+  .gallery{grid-template-columns:1fr}
+  .gallery-item,.gallery-item:nth-child(n){grid-column:1!important;min-height:250px}
+  .photo-reel-card{width:min(86vw,320px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal.visible,.stagger.visible>*,.motion-ready.motion-in{animation:none!important;opacity:1!important;transform:none!important;filter:none!important}
+}
