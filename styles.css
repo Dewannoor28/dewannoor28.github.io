@@ -1484,3 +1484,90 @@ body[data-page="home"] .typed-name-word .typed-accent{color:#4d72ee!important}
     font-size:clamp(2rem,9.5vw,3rem)!important;
   }
 }
+
+
+/* ==============================================================
+   v30 — MOBILE FULL-PHOTO MODE
+   Preserve complete images on phones instead of cropping them.
+   ============================================================== */
+@media(max-width:650px){
+  /* Leadership / achievement / gallery cards */
+  .leadership-grid .media-card img,
+  .achievement-grid .media-card img,
+  .media-card img,
+  .gallery-item img{
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:auto!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:var(--panel2)!important;
+  }
+
+  /* Main image reel: show the complete frame */
+  .photo-reel-card{
+    height:auto!important;
+    min-height:0!important;
+    aspect-ratio:auto!important;
+    background:var(--panel2)!important;
+  }
+  .photo-reel-card img{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:auto!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:var(--panel2)!important;
+  }
+  .photo-reel-card figcaption{
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    border-radius:0 0 16px 16px!important;
+    background:color-mix(in srgb,#0a121f 88%,transparent)!important;
+  }
+
+  /* Visual Journey: keep every conference / campus photo uncropped */
+  .journey-story-card img{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:auto!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:var(--panel2)!important;
+  }
+
+  /* Gallery cards should grow with each photo's natural ratio */
+  .gallery-item,
+  .gallery-item:nth-child(n){
+    min-height:0!important;
+    height:auto!important;
+    aspect-ratio:auto!important;
+  }
+
+  /* Prevent image clipping by rounded card wrappers */
+  .media-card,
+  .gallery-item,
+  .journey-story-card,
+  .photo-reel-card{
+    overflow:hidden!important;
+  }
+}
+
+@media(max-width:420px){
+  .photo-reel-card figcaption{
+    padding:10px 12px!important;
+    font-size:.62rem!important;
+  }
+}
