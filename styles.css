@@ -1276,3 +1276,146 @@ body[data-page="home"] .marquee{
   .photo-reel{overflow:hidden!important;overflow-x:hidden!important}
   .photo-reel-track{overflow:visible!important}
 }
+
+
+/* ==============================================================
+   v25 — VISUAL JOURNEY: ONE STORY PER SLIDE
+   ============================================================== */
+.visual-journey-section{overflow:hidden}
+.journey-slider{
+  width:100%;
+  overflow:hidden!important;
+  border-radius:26px;
+  outline:none;
+  box-shadow:0 22px 60px rgba(62,82,128,.09);
+}
+.journey-track,
+.journey-strip{
+  display:flex!important;
+  width:100%!important;
+  gap:0!important;
+  overflow:visible!important;
+  padding:0!important;
+  scroll-snap-type:none!important;
+  transform:translate3d(0,0,0);
+  transition:transform .78s cubic-bezier(.2,.72,.2,1);
+  will-change:transform;
+}
+.journey-story-card{
+  flex:0 0 100%!important;
+  width:100%!important;
+  min-width:100%!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.18fr) minmax(320px,.82fr)!important;
+  align-items:stretch;
+  border:1px solid var(--line);
+  border-radius:26px;
+  overflow:hidden;
+  background:linear-gradient(145deg,var(--panel),color-mix(in srgb,var(--panel2) 88%,transparent));
+  box-shadow:none!important;
+  transform:none!important;
+}
+.journey-story-card:hover,
+.journey-story-card:focus-visible{
+  transform:none!important;
+  box-shadow:none!important;
+}
+.journey-story-card img{
+  width:100%!important;
+  height:100%!important;
+  min-height:480px;
+  aspect-ratio:auto!important;
+  object-fit:cover;
+  background:var(--panel2);
+}
+.journey-story-card .journey-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:clamp(28px,4vw,56px)!important;
+  background:
+    radial-gradient(circle at 90% 12%,color-mix(in srgb,var(--accent2) 12%,transparent),transparent 34%),
+    linear-gradient(145deg,var(--panel),var(--panel2));
+}
+.journey-story-card .journey-copy>span{
+  font:700 .65rem var(--mono);
+  letter-spacing:.08em;
+  color:var(--accent);
+  text-transform:uppercase;
+}
+.journey-story-card h3{
+  margin:12px 0 16px!important;
+  font:700 clamp(2rem,3.4vw,3.6rem)/.98 var(--display)!important;
+  letter-spacing:-.045em;
+}
+.journey-caption{
+  margin:0 0 18px!important;
+  font-size:1rem!important;
+  line-height:1.7!important;
+  color:var(--text)!important;
+  font-weight:550;
+}
+.journey-story{
+  margin:0!important;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  color:var(--muted)!important;
+  font-size:.93rem!important;
+  line-height:1.8!important;
+}
+.journey-controls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:18px;
+}
+.journey-controls button{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:var(--panel);
+  color:var(--text);
+  cursor:pointer;
+  font:700 1rem var(--mono);
+  transition:transform .2s ease,border-color .2s ease,background .2s ease;
+}
+.journey-controls button:hover{
+  transform:translateY(-2px);
+  border-color:var(--accent);
+  background:var(--panel2);
+}
+.journey-controls span{
+  min-width:72px;
+  text-align:center;
+  font:600 .72rem var(--mono);
+  color:var(--muted);
+}
+@media(max-width:900px){
+  .journey-story-card{
+    grid-template-columns:1fr!important;
+  }
+  .journey-story-card img{
+    min-height:0;
+    height:auto!important;
+    aspect-ratio:16/9!important;
+  }
+  .journey-story-card .journey-copy{
+    padding:28px!important;
+  }
+}
+@media(max-width:560px){
+  .journey-slider{border-radius:18px}
+  .journey-story-card{border-radius:18px}
+  .journey-story-card img{aspect-ratio:4/3!important}
+  .journey-story-card .journey-copy{padding:22px!important}
+  .journey-story-card h3{font-size:2rem!important}
+  .journey-caption{font-size:.92rem!important}
+  .journey-story{font-size:.86rem!important;line-height:1.7!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .journey-track,.journey-strip{transition:none!important}
+}
