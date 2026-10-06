@@ -220,7 +220,7 @@
   const setupPhotoSlider=()=>{
     const viewport=$('.photo-reel'), track=$('#photo-reel-track');
     if(!viewport||!track)return;
-    const cards=$('.photo-reel-card',track);
+    const cards=$$('.photo-reel-card',track);
     if(!cards.length)return;
     const prev=$('#reel-prev'), next=$('#reel-next'), count=$('#reel-count');
     let index=0, timer=null, touchX=null;
