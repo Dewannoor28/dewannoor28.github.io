@@ -1571,3 +1571,43 @@ body[data-page="home"] .typed-name-word .typed-accent{color:#4d72ee!important}
     font-size:.62rem!important;
   }
 }
+
+
+/* ==============================================================
+   v31 — INNER PAGE MOBILE RELIABILITY
+   Never blur or hide content while navigating between pages.
+   ============================================================== */
+body:not([data-page="home"]) .scroll-seq-ready,
+body:not([data-page="home"]) .motion-ready{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+  animation:none!important;
+}
+body:not([data-page="home"]) .reveal,
+body:not([data-page="home"]) .stagger>*{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+}
+@media(max-width:819px){
+  /* Mobile home animation remains light: fade/translate only, never blur. */
+  body[data-page="home"] .scroll-seq-ready{
+    filter:none!important;
+    opacity:.28!important;
+    transform:translateY(16px)!important;
+  }
+  body[data-page="home"] .scroll-seq-ready.scroll-seq-in{
+    animation:v31MobileReveal .5s ease-out var(--scroll-delay,0ms) forwards!important;
+  }
+  @keyframes v31MobileReveal{
+    from{opacity:.28;transform:translateY(16px)}
+    to{opacity:1;transform:none}
+  }
+
+  /* Images display as soon as bytes are available; no visual filter during decode. */
+  img{
+    filter:none!important;
+    -webkit-filter:none!important;
+  }
+}
