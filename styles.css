@@ -1419,3 +1419,34 @@ body[data-page="home"] .marquee{
 @media(prefers-reduced-motion:reduce){
   .journey-track,.journey-strip{transition:none!important}
 }
+
+
+/* ==============================================================
+   v28 — SCROLL-BY-SCROLL STAGGERED REVEAL
+   Classes are added only after JS initializes, so static content never stays blank.
+   ============================================================== */
+.scroll-seq-ready{
+  opacity:.08!important;
+  transform:translateY(24px) scale(.985)!important;
+  filter:blur(6px)!important;
+}
+.scroll-seq-ready.scroll-seq-in{
+  animation:v28ScrollReveal .72s cubic-bezier(.18,.78,.22,1) var(--scroll-delay,0ms) forwards!important;
+}
+@keyframes v28ScrollReveal{
+  0%{opacity:.08;transform:translateY(24px) scale(.985);filter:blur(6px)}
+  100%{opacity:1;transform:none;filter:none}
+}
+.journey-story-card.scroll-seq-ready,
+.photo-reel.scroll-seq-ready{
+  transform:translateY(28px) scale(.99)!important;
+}
+@media(max-width:650px){
+  .scroll-seq-ready{transform:translateY(18px) scale(.992)!important;filter:blur(4px)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .scroll-seq-ready,
+  .scroll-seq-ready.scroll-seq-in{
+    opacity:1!important;transform:none!important;filter:none!important;animation:none!important;
+  }
+}
