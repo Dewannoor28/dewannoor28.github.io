@@ -121,30 +121,72 @@
   socials('#hero-social',5); socials('#footer-social');
 
 
-  // v13: kinetic hero phrases. Each phrase reveals word-by-word, then rotates.
+  // v19: current work + identity are typed letter-by-letter.
+  const heroName = $('#hero-name');
   const kineticEl = $('#kinetic-phrase');
-  if (kineticEl) {
+  const reducedMotion = mq('(prefers-reduced-motion: reduce)').matches;
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  const typeName = async () => {
+    if (!heroName) return;
+    const fullName = 'DEWAN NAFIUL ISLAM NOOR';
+    const accentAt = fullName.lastIndexOf('NOOR');
+    if (reducedMotion) {
+      heroName.textContent = fullName;
+      return;
+    }
+    heroName.textContent = '';
+    heroName.classList.add('is-typing');
+    for (let i = 0; i < fullName.length; i++) {
+      const ch = fullName[i];
+      if (ch === ' ') {
+        heroName.append(document.createTextNode(' '));
+      } else {
+        const span = document.createElement('span');
+        span.className = 'typed-char' + (i >= accentAt ? ' typed-accent' : '');
+        span.textContent = ch;
+        heroName.append(span);
+      }
+      await sleep(62);
+    }
+    heroName.classList.remove('is-typing');
+  };
+
+  const typeCurrentWork = async () => {
+    if (!kineticEl) return;
     const phrases = [
-      ['RESEARCH', 'AI'],
-      ['BUILD', 'INTELLIGENT', 'SYSTEMS'],
-      ['SECURE', 'MOBILE', 'APPS']
+      'AI/ML RESEARCH · HAR · COMPUTER VISION · HEALTHCARE AI',
+      'BYTE CAPSULE · MOBILE APPLICATION SECURITY INTERNSHIP'
     ];
-    const reduced = mq('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      kineticEl.textContent = 'AI/ML RESEARCH + BYTE CAPSULE SECURITY INTERNSHIP';
+      return;
+    }
     let phraseIndex = 0;
-    const renderPhrase = () => {
-      const words = phrases[phraseIndex];
-      kineticEl.innerHTML = words.map((word,i)=>`<span class="kinetic-word" style="--word-delay:${i*150}ms">${word}</span>`).join('<span class="kinetic-space"> </span>');
-      if (reduced) return;
-      setTimeout(()=>{
-        kineticEl.classList.add('kinetic-out');
-        setTimeout(()=>{
-          phraseIndex=(phraseIndex+1)%phrases.length;
-          kineticEl.classList.remove('kinetic-out');
-          renderPhrase();
-        },430);
-      },2300);
-    };
-    renderPhrase();
+    while (true) {
+      const phrase = phrases[phraseIndex];
+      kineticEl.textContent = '';
+      kineticEl.classList.add('is-typing');
+      for (const ch of phrase) {
+        kineticEl.textContent += ch;
+        await sleep(38);
+      }
+      kineticEl.classList.remove('is-typing');
+      await sleep(1900);
+      kineticEl.classList.add('is-typing');
+      while (kineticEl.textContent.length) {
+        kineticEl.textContent = kineticEl.textContent.slice(0, -1);
+        await sleep(18);
+      }
+      kineticEl.classList.remove('is-typing');
+      await sleep(180);
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+    }
+  };
+
+  if (page === 'home') {
+    typeName();
+    setTimeout(() => typeCurrentWork(), reducedMotion ? 0 : 420);
   }
 
   const renderMetrics=()=>{const el=$('#hero-metrics');if(!el)return;el.innerHTML=D.hero.highlights.map(x=>`<div class="metric"><strong data-count="${esc(x.value)}">0</strong><span>${esc(x.label)}</span></div>`).join('');const animate=n=>{const raw=n.dataset.count,target=parseFloat(raw);if(Number.isNaN(target)){n.textContent=raw;return}const dur=900,t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/dur),v=target*p;n.textContent=raw.includes('.')?v.toFixed(2):Math.round(v);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)};if(!('IntersectionObserver' in window)){ $('[data-count]').forEach(animate); return; }const counterIO=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;animate(e.target);counterIO.unobserve(e.target)}),{threshold:.5});$('[data-count]').forEach(x=>counterIO.observe(x))};
@@ -158,7 +200,41 @@
   const renderLeadership=()=>{const el=$('#leadership-grid');if(!el)return;el.innerHTML=D.leadership.map(x=>`<article class="media-card ${x.image?'':'text-only'}">${x.image?`<img src="${esc(x.image)}" alt="${esc(x.organization)}" loading="lazy" decoding="async">`:''}<div class="body"><div class="role">${esc(x.currentRole)} · ${esc(x.period)}</div><h3>${esc(x.organization)}</h3><p>${esc(x.description)}</p>${x.roles?.length?`<p>${x.roles.map(r=>'• '+esc(r)).join('<br>')}</p>`:''}</div></article>`).join('')};
   const renderAchievements=()=>{const el=$('#achievement-grid');if(!el)return;el.innerHTML=D.achievements.map(x=>`<article class="media-card"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async"><div class="body"><div class="role">${esc(x.subtitle)}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`).join('')};
   const renderJourney=()=>{const el=$('#journey-strip');if(!el)return;el.innerHTML=(D.heroSlides||[]).map((x,i)=>`<article class="journey-card" tabindex="0"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async" fetchpriority="low"><div class="journey-copy"><span>${String(i+1).padStart(2,'0')}</span><h3>${esc(x.title)}</h3><p>${esc(x.caption)}</p></div></article>`).join('')};
-  const renderPhotoReel=()=>{const el=$('#photo-reel-track');if(!el)return;const list=D.photoReel||[];const doubled=[...list,...list];el.innerHTML=doubled.map((x,i)=>`<figure class="photo-reel-card" aria-hidden="${i>=list.length?'true':'false'}"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async" fetchpriority="low"><figcaption>${esc(x.title)}</figcaption></figure>`).join('')};
+  const renderPhotoReel=()=>{const el=$('#photo-reel-track');if(!el)return;const list=D.photoReel||[];el.innerHTML=list.map((x,i)=>`<figure class="photo-reel-card" aria-hidden="${i===0?'false':'true'}"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="${i===0?'eager':'lazy'}" decoding="async" fetchpriority="${i===0?'high':'low'}"><figcaption>${esc(x.title)}</figcaption></figure>`).join('')};
+
+  const setupPhotoSlider=()=>{
+    const viewport=$('.photo-reel'), track=$('#photo-reel-track');
+    if(!viewport||!track)return;
+    const cards=$('.photo-reel-card',track);
+    if(!cards.length)return;
+    const prev=$('#reel-prev'), next=$('#reel-next'), count=$('#reel-count');
+    let index=0, timer=null, touchX=null;
+
+    viewport.setAttribute('tabindex','0');
+    const update=()=>{
+      track.style.transform=`translate3d(-${index*100}%,0,0)`;
+      cards.forEach((card,i)=>card.setAttribute('aria-hidden',String(i!==index)));
+      if(count) count.textContent=`${index+1} / ${cards.length}`;
+    };
+    const go=step=>{index=(index+step+cards.length)%cards.length;update();restart();};
+    const stop=()=>{if(timer){clearInterval(timer);timer=null;}};
+    const start=()=>{if(reducedMotion||cards.length<2)return;stop();timer=setInterval(()=>{index=(index+1)%cards.length;update();},4200);};
+    const restart=()=>{stop();start();};
+
+    prev?.addEventListener('click',()=>go(-1));
+    next?.addEventListener('click',()=>go(1));
+    viewport.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}else if(e.key==='ArrowRight'){e.preventDefault();go(1)}});
+    viewport.addEventListener('mouseenter',stop);
+    viewport.addEventListener('mouseleave',start);
+    viewport.addEventListener('focusin',stop);
+    viewport.addEventListener('focusout',start);
+    viewport.addEventListener('touchstart',e=>{touchX=e.changedTouches[0]?.clientX??null;stop();},{passive:true});
+    viewport.addEventListener('touchend',e=>{if(touchX===null)return;const dx=(e.changedTouches[0]?.clientX??touchX)-touchX;if(Math.abs(dx)>45)go(dx<0?1:-1);touchX=null;start();},{passive:true});
+    document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+
+    update();
+    start();
+  };
   const renderGallery=()=>{const el=$('#gallery-grid');if(!el)return;el.innerHTML=D.gallery.map(x=>`<figure class="gallery-item" data-img="${esc(x.image)}" data-title="${esc(x.title)}"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async"><figcaption class="gallery-caption"><span>${esc(x.category)}</span><h4>${esc(x.title)}</h4></figcaption></figure>`).join('');$$('.gallery-item').forEach(it=>it.addEventListener('click',()=>{const m=$('#image-modal');$('#modal-image').src=it.dataset.img;$('#modal-image').alt=it.dataset.title;m?.classList.add('open')}))};
   $('#modal-close')?.addEventListener('click',()=>$('#image-modal')?.classList.remove('open'));$('#image-modal')?.addEventListener('click',e=>{if(e.target.id==='image-modal')e.currentTarget.classList.remove('open')});
 
@@ -203,7 +279,7 @@
       fullPhoto.src=D.site.profileImage;
     }
     $('#cv-button') && ($('#cv-button').href=D.site.cvFile);
-    renderMetrics(); renderMarquee(); renderResearchRows('#research-rows',4); renderProjects('#project-grid','featured'); renderPubs('#publication-list','Published'); renderEducation(); renderSkills(); renderLeadership(); renderAchievements(); renderPhotoReel(); renderJourney(); renderGallery(); renderExperience(); setupTerminal();
+    renderMetrics(); renderMarquee(); renderResearchRows('#research-rows',4); renderProjects('#project-grid','featured'); renderPubs('#publication-list','Published'); renderEducation(); renderSkills(); renderLeadership(); renderAchievements(); renderPhotoReel(); setupPhotoSlider(); renderJourney(); renderGallery(); renderExperience(); setupTerminal();
   }
 
   // Filters on listing pages/home
