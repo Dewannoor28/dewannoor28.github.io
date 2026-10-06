@@ -1257,3 +1257,22 @@ body[data-page="home"] .marquee{
   body[data-page="home"] .hero-focus-row span{font-size:.59rem;padding:5px 8px}
   body[data-page="home"] .metric{padding:13px 14px!important}
 }
+
+
+/* v22 — carousel interaction fix */
+.photo-reel{
+  overflow:hidden!important;
+  overflow-x:hidden!important;
+  scrollbar-width:none!important;
+}
+.photo-reel::-webkit-scrollbar{display:none!important}
+.photo-reel-track{
+  overflow:visible!important;
+}
+.photo-reel-card{
+  scroll-snap-align:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .photo-reel{overflow:hidden!important;overflow-x:hidden!important}
+  .photo-reel-track{overflow:visible!important}
+}
