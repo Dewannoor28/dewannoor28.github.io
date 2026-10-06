@@ -28,7 +28,7 @@ const PORTFOLIO_DATA = {
   heroSlides: [
     {
       title: "Research in Action",
-      image: "assets/images/slide-research.webp",
+      image: "assets/images/spicscon-conference-group-2026.webp",
       category: "Research",
       caption: "My research journey began with Human Activity Recognition and expanded into healthcare AI, computer vision and intelligent video understanding.",
       story: "Presenting research at conferences turned experiments, model results and technical writing into real conversations with researchers and faculty. Each presentation is another step toward building AI systems that are useful beyond the lab."
