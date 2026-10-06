@@ -46,7 +46,6 @@ Main design/animation files:
 Profile image and gallery assets are inside `assets/images/`.
 CV is at `assets/cv/Dewan_Nafiul_Islam_Noor_CV.pdf`.
 
-
 ## GitHub Pages deployment
 1. Extract the ZIP.
 2. Upload **all files and folders inside it** to the root of a GitHub repository.
