@@ -24,6 +24,147 @@
     document.documentElement.dataset.theme = next; try { localStorage.setItem('dn-theme-v4', next); } catch (_) {} paintTheme();
   });
 
+  // v32: lightweight multilingual translator (loads Google Translate only when needed).
+  const languageNames = {en:'EN',bn:'BN',hi:'HI',ar:'AR',ja:'JA'};
+  const savedLanguage = (()=>{try{return localStorage.getItem('dn-language')||'en'}catch(_){return 'en'}})();
+  let activeLanguage = languageNames[savedLanguage] ? savedLanguage : 'en';
+
+  const setLanguageDirection = lang => {
+    document.documentElement.lang = lang === 'en' ? 'en' : lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.body.classList.toggle('rtl-language', lang === 'ar');
+  };
+  setLanguageDirection(activeLanguage);
+
+  const clearTranslateCookies = () => {
+    const expires='Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie=`googtrans=; expires=${expires}; path=/`;
+    document.cookie=`googtrans=; expires=${expires}; path=/; domain=${location.hostname}`;
+    document.cookie=`googtrans=; expires=${expires}; path=/; domain=.${location.hostname}`;
+  };
+
+  const protectOwnName = (root=document.body) => {
+    const fullName='Dewan Nafiul Islam Noor';
+    const upperName='DEWAN NAFIUL ISLAM NOOR';
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()){
+      const node=walker.currentNode;
+      const parent=node.parentElement;
+      if(!parent || parent.closest('script,style,textarea,.notranslate,[translate="no"]')) continue;
+      if(node.nodeValue?.includes(fullName) || node.nodeValue?.includes(upperName)) nodes.push(node);
+    }
+    nodes.forEach(node=>{
+      const text=node.nodeValue||'';
+      const pattern=/(Dewan Nafiul Islam Noor|DEWAN NAFIUL ISLAM NOOR)/g;
+      const parts=text.split(pattern);
+      if(parts.length<2)return;
+      const frag=document.createDocumentFragment();
+      parts.forEach(part=>{
+        if(part===fullName || part===upperName){
+          const span=document.createElement('span');
+          span.className='notranslate protected-name';
+          span.setAttribute('translate','no');
+          span.textContent=part;
+          frag.append(span);
+        }else if(part){
+          frag.append(document.createTextNode(part));
+        }
+      });
+      node.parentNode?.replaceChild(frag,node);
+    });
+  };
+
+  let translateLoading=false;
+  window.googleTranslateElementInit=()=>{
+    if(!window.google?.translate?.TranslateElement)return;
+    const host=$('#google_translate_element');
+    if(host && !host.dataset.ready){
+      new google.translate.TranslateElement({
+        pageLanguage:'en',
+        includedLanguages:'bn,hi,ar,ja',
+        autoDisplay:false
+      },'google_translate_element');
+      host.dataset.ready='1';
+    }
+    document.dispatchEvent(new Event('dn-translate-ready'));
+  };
+
+  const loadTranslator=()=>{
+    if(window.google?.translate?.TranslateElement){
+      window.googleTranslateElementInit();
+      return;
+    }
+    if(translateLoading || $('#dn-google-translate-script'))return;
+    translateLoading=true;
+    const script=document.createElement('script');
+    script.id='dn-google-translate-script';
+    script.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    script.async=true;
+    script.onerror=()=>{translateLoading=false;document.body.classList.add('translator-unavailable')};
+    document.head.append(script);
+  };
+
+  const applyGoogleLanguage=(lang,attempt=0)=>{
+    const combo=document.querySelector('.goog-te-combo');
+    if(combo){
+      if(combo.value!==lang){
+        combo.value=lang;
+        combo.dispatchEvent(new Event('change',{bubbles:true}));
+      }
+      return;
+    }
+    if(attempt<35)setTimeout(()=>applyGoogleLanguage(lang,attempt+1),120);
+  };
+
+  const setupLanguageSwitcher=()=>{
+    const wrap=$('#language-switcher'), toggle=$('#language-toggle'), menu=$('#language-menu'), code=$('#language-code');
+    if(!wrap||!toggle||!menu)return;
+
+    const paint=()=>{
+      if(code)code.textContent=languageNames[activeLanguage]||'EN';
+      $('[data-lang]',menu).forEach(btn=>btn.classList.toggle('active',btn.dataset.lang===activeLanguage));
+    };
+    paint();
+
+    const close=()=>{menu.classList.remove('open');toggle.setAttribute('aria-expanded','false')};
+    toggle.addEventListener('click',e=>{
+      e.stopPropagation();
+      const open=!menu.classList.contains('open');
+      menu.classList.toggle('open',open);
+      toggle.setAttribute('aria-expanded',String(open));
+      if(open && activeLanguage!=='en')loadTranslator();
+    });
+    document.addEventListener('click',e=>{if(!wrap.contains(e.target))close()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+
+    $('[data-lang]',menu).forEach(btn=>btn.addEventListener('click',()=>{
+      const lang=btn.dataset.lang;
+      if(!languageNames[lang] || lang===activeLanguage){close();return;}
+      activeLanguage=lang;
+      try{localStorage.setItem('dn-language',lang)}catch(_){}
+      setLanguageDirection(lang);
+      paint();
+      close();
+
+      if(lang==='en'){
+        clearTranslateCookies();
+        location.reload();
+        return;
+      }
+
+      protectOwnName();
+      loadTranslator();
+      applyGoogleLanguage(lang);
+    }));
+
+    document.addEventListener('dn-translate-ready',()=>applyGoogleLanguage(activeLanguage));
+    if(activeLanguage!=='en'){
+      protectOwnName();
+      loadTranslator();
+    }
+  };
+
   // Mobile nav
   const menuBtn = $('#menu-toggle'), mobileNav = $('#mobile-nav');
   const setMenu = open => {
@@ -358,6 +499,9 @@
   if(page==='experience'){renderExperience()}
   if(page==='education'){renderEducation();renderSkills()}
   if(page==='achievements'){renderAchievements();renderLeadership();renderGallery()}
+  protectOwnName();
+  setupLanguageSwitcher();
+
   // v28: scroll-triggered sequence. Content remains visible unless this JS successfully activates it.
   const setupScrollSequence=()=>{
     if(page!=='home') return;
@@ -419,4 +563,9 @@
     const related=D.projects.find(pr=>p.tags?.some(t=>pr.stack.some(s=>s.toLowerCase().includes(t.toLowerCase())||t.toLowerCase().includes(s.toLowerCase()))));
     $('#detail-related').innerHTML=related?`<h3>Related project</h3><p>${esc(related.title)}</p><a class="btn ghost" href="project.html?id=${encodeURIComponent(slug(related.title))}">Open project →</a>`:'<h3>Research index</h3><p>Browse the full publication record and connected research themes.</p><a class="btn ghost" href="publications.html">All publications →</a>';
   }
+
+  queueMicrotask(()=>{
+    protectOwnName();
+    if(activeLanguage!=='en')applyGoogleLanguage(activeLanguage);
+  });
 })();
