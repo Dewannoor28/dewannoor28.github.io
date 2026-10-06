@@ -63,7 +63,7 @@
   const io = ('IntersectionObserver' in window)
     ? new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.12})
     : { observe(el){ el.classList.add('visible'); }, unobserve(){} };
-  $('.reveal,.stagger').forEach(el => io.observe(el));
+  $$('.reveal,.stagger').forEach(el => io.observe(el));
 
   // Command palette
   const commands = [
@@ -121,35 +121,62 @@
   socials('#hero-social',5); socials('#footer-social');
 
 
-  // v19: current work + identity are typed letter-by-letter.
+  // v21: deterministic letter-by-letter hero typing.
   const heroName = $('#hero-name');
   const kineticEl = $('#kinetic-phrase');
   const reducedMotion = mq('(prefers-reduced-motion: reduce)').matches;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-  const typeName = async () => {
-    if (!heroName) return;
-    const fullName = 'DEWAN NAFIUL ISLAM NOOR';
-    const accentAt = fullName.lastIndexOf('NOOR');
-    if (reducedMotion) {
-      heroName.textContent = fullName;
+  const appendTypedChar = (target, ch, accent=false) => {
+    if (ch === ' ') {
+      target.append(document.createTextNode('\u00A0'));
       return;
     }
+    const span = document.createElement('span');
+    span.className = 'typed-char' + (accent ? ' typed-accent' : '');
+    span.textContent = ch;
+    target.append(span);
+  };
+
+  const typeName = async () => {
+    if (!heroName) return;
+    const words = ['DEWAN','NAFIUL','ISLAM','NOOR'];
     heroName.textContent = '';
     heroName.classList.add('is-typing');
-    for (let i = 0; i < fullName.length; i++) {
-      const ch = fullName[i];
-      if (ch === ' ') {
-        heroName.append(document.createTextNode(' '));
-      } else {
-        const span = document.createElement('span');
-        span.className = 'typed-char' + (i >= accentAt ? ' typed-accent' : '');
-        span.textContent = ch;
-        heroName.append(span);
+
+    for (let w = 0; w < words.length; w++) {
+      const word = words[w];
+      for (const ch of word) {
+        appendTypedChar(heroName, ch, w === words.length - 1);
+        await sleep(72);
       }
-      await sleep(62);
+      if (w < words.length - 1) {
+        heroName.append(document.createTextNode('\u00A0'));
+        await sleep(150);
+      }
     }
     heroName.classList.remove('is-typing');
+  };
+
+  const typeLine = async (text) => {
+    if (!kineticEl) return;
+    kineticEl.textContent = '';
+    kineticEl.classList.add('is-typing');
+    for (const ch of text) {
+      kineticEl.textContent += ch;
+      await sleep(42);
+    }
+    kineticEl.classList.remove('is-typing');
+  };
+
+  const eraseLine = async () => {
+    if (!kineticEl) return;
+    kineticEl.classList.add('is-typing');
+    while (kineticEl.textContent.length) {
+      kineticEl.textContent = kineticEl.textContent.slice(0, -1);
+      await sleep(16);
+    }
+    kineticEl.classList.remove('is-typing');
   };
 
   const typeCurrentWork = async () => {
@@ -158,38 +185,26 @@
       'AI/ML RESEARCH · HAR · COMPUTER VISION · HEALTHCARE AI',
       'BYTE CAPSULE · MOBILE APPLICATION SECURITY INTERNSHIP'
     ];
-    if (reducedMotion) {
-      kineticEl.textContent = 'AI/ML RESEARCH + BYTE CAPSULE SECURITY INTERNSHIP';
-      return;
-    }
     let phraseIndex = 0;
     while (true) {
-      const phrase = phrases[phraseIndex];
-      kineticEl.textContent = '';
-      kineticEl.classList.add('is-typing');
-      for (const ch of phrase) {
-        kineticEl.textContent += ch;
-        await sleep(38);
-      }
-      kineticEl.classList.remove('is-typing');
-      await sleep(1900);
-      kineticEl.classList.add('is-typing');
-      while (kineticEl.textContent.length) {
-        kineticEl.textContent = kineticEl.textContent.slice(0, -1);
-        await sleep(18);
-      }
-      kineticEl.classList.remove('is-typing');
-      await sleep(180);
+      await typeLine(phrases[phraseIndex]);
+      await sleep(1800);
+      await eraseLine();
+      await sleep(220);
       phraseIndex = (phraseIndex + 1) % phrases.length;
     }
   };
 
-  if (page === 'home') {
-    typeName();
-    setTimeout(() => typeCurrentWork(), reducedMotion ? 0 : 420);
-  }
+  const startHeroTyping = async () => {
+    if (page !== 'home') return;
+    await typeName();
+    await sleep(280);
+    typeCurrentWork();
+  };
 
-  const renderMetrics=()=>{const el=$('#hero-metrics');if(!el)return;el.innerHTML=D.hero.highlights.map(x=>`<div class="metric"><strong data-count="${esc(x.value)}">0</strong><span>${esc(x.label)}</span></div>`).join('');const animate=n=>{const raw=n.dataset.count,target=parseFloat(raw);if(Number.isNaN(target)){n.textContent=raw;return}const dur=900,t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/dur),v=target*p;n.textContent=raw.includes('.')?v.toFixed(2):Math.round(v);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)};if(!('IntersectionObserver' in window)){ $('[data-count]').forEach(animate); return; }const counterIO=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;animate(e.target);counterIO.unobserve(e.target)}),{threshold:.5});$('[data-count]').forEach(x=>counterIO.observe(x))};
+  startHeroTyping();
+
+  const renderMetrics=()=>{const el=$('#hero-metrics');if(!el)return;el.innerHTML=D.hero.highlights.map(x=>`<div class="metric"><strong data-count="${esc(x.value)}">0</strong><span>${esc(x.label)}</span></div>`).join('');const animate=n=>{const raw=n.dataset.count,target=parseFloat(raw);if(Number.isNaN(target)){n.textContent=raw;return}const dur=900,t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/dur),v=target*p;n.textContent=raw.includes('.')?v.toFixed(2):Math.round(v);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)};if(!('IntersectionObserver' in window)){ $$('[data-count]').forEach(animate); return; }const counterIO=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;animate(e.target);counterIO.unobserve(e.target)}),{threshold:.5});$$('[data-count]').forEach(x=>counterIO.observe(x))};
 
   const renderMarquee=()=>{const el=$('#marquee-track');if(!el)return;const words=D.about.focusAreas;el.innerHTML=[...words,...words].map(x=>`<span>${esc(x)}</span>`).join('')};
   const renderResearchRows=(target='#research-rows', limit=null)=>{const el=$(target);if(!el)return;const rows=(limit?D.researchStory.steps.slice(0,limit):D.researchStory.steps);el.innerHTML=rows.map(s=>`<article class="research-row"><div class="num">${esc(s.number)}</div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></article>`).join('')};
