@@ -1761,3 +1761,60 @@ html[dir="rtl"] .footer-brand.notranslate{
 @media(prefers-reduced-motion:reduce){
   .language-fab,.language-menu,.language-menu button{transition:none!important}
 }
+
+
+/* ==============================================================
+   v33 — TRANSLATOR RELIABILITY + TABLET RESPONSIVENESS
+   ============================================================== */
+.language-switcher{
+  right:max(14px,env(safe-area-inset-right))!important;
+  bottom:max(14px,env(safe-area-inset-bottom))!important;
+}
+.language-menu{
+  max-height:min(430px,calc(100vh - 96px));
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.language-menu button{
+  touch-action:manipulation;
+}
+
+/* Tablet portrait + landscape */
+@media(min-width:651px) and (max-width:1024px){
+  .language-switcher{
+    right:max(16px,env(safe-area-inset-right))!important;
+    bottom:max(16px,env(safe-area-inset-bottom))!important;
+  }
+  .language-fab{
+    min-width:68px;
+    height:43px;
+    padding:0 12px;
+  }
+  .language-menu{
+    width:220px;
+    bottom:52px;
+    max-height:min(390px,calc(100vh - 110px));
+  }
+  .language-menu button{
+    min-height:44px;
+    padding:9px 10px;
+  }
+}
+
+/* Phones, including short landscape screens */
+@media(max-width:650px){
+  .language-switcher{
+    right:max(10px,env(safe-area-inset-right))!important;
+    bottom:max(10px,env(safe-area-inset-bottom))!important;
+  }
+  .language-menu{
+    max-height:min(360px,calc(100vh - 82px));
+  }
+}
+@media(max-height:520px){
+  .language-menu{
+    max-height:calc(100vh - 72px);
+    overflow-y:auto;
+  }
+}
