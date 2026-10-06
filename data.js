@@ -428,38 +428,38 @@ const PORTFOLIO_DATA = {
     {
       organization: "BAUET Computer Society",
       currentRole: "President",
-      period: "2022 – Present",
+      period: "Mar 2025 – Nov 2025",
       image: "assets/images/lead-computer-society.webp",
       roles: [
         "Deputy IT & Skill Development Secretary — Oct 2022 to Jun 2023",
         "IT & Skill Development Secretary — Jun 2023 to Oct 2024",
         "Vice President — Oct 2024 to Mar 2025",
-        "President — Mar 2025 to Present"
+        "President — Mar 2025 to Nov 2025"
       ],
       description: "Led technical activities, workshops, academic events, student engagement and organizational initiatives."
     },
     {
       organization: "BAUET Welfare Club",
       currentRole: "President",
-      period: "2022 – Present",
+      period: "Mar 2025 – Oct 2025",
       image: "assets/images/lead-welfare.webp",
       roles: [
         "General Member — Dec 2022 to Mar 2024",
         "Publication Secretary — Mar 2024 to Sep 2024",
         "General Secretary — Sep 2024 to Mar 2025",
-        "President — Mar 2025 to Present"
+        "President — Mar 2025 to Oct 2025"
       ],
       description: "Organized and coordinated welfare and humanitarian initiatives including Eid gift distribution and community-focused activities."
     },
     {
       organization: "Hult Prize at BAUET",
       currentRole: "Campus Director",
-      period: "2023 – Present",
+      period: "Sep 2024 – Sep 2025",
       image: "assets/images/lead-hult.webp",
       roles: [
         "Officer of Event & Hospitality Management — Jan 2023 to Dec 2023",
         "Head of Logistics Management — Dec 2023 to Sep 2024",
-        "Campus Director — Sep 2024 to Present"
+        "Campus Director — Sep 2024 to Sep 2025"
       ],
       description: "Worked on entrepreneurship-event organization, logistics, participant coordination, communication and campus-level competition management."
     },
