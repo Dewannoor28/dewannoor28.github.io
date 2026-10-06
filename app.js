@@ -117,30 +117,31 @@
   };
   socials('#hero-social',5); socials('#footer-social');
 
-  // v12: fast, visible hero typewriter. Starts immediately after first paint.
-  const typeEl = $('#typing-role');
-  if (typeEl) {
-    const phrases = ['working on AI/ML research', 'interning in mobile app security'];
+
+  // v13: kinetic hero phrases. Each phrase reveals word-by-word, then rotates.
+  const kineticEl = $('#kinetic-phrase');
+  if (kineticEl) {
+    const phrases = [
+      ['RESEARCH', 'AI'],
+      ['BUILD', 'INTELLIGENT', 'SYSTEMS'],
+      ['SECURE', 'MOBILE', 'APPS']
+    ];
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) {
-      let i=0; typeEl.textContent=phrases[0];
-      setInterval(()=>{i=(i+1)%phrases.length;typeEl.classList.remove('status-crossfade');void typeEl.offsetWidth;typeEl.textContent=phrases[i];typeEl.classList.add('status-crossfade')},3200);
-    } else {
-      let p=0, c=0, deleting=false;
-      const tick=()=>{
-        const text=phrases[p];
-        if(!deleting){
-          c++; typeEl.textContent=text.slice(0,c);
-          if(c>=text.length){deleting=true;return setTimeout(tick,1450)}
-          return setTimeout(tick,48);
-        }
-        c--; typeEl.textContent=text.slice(0,Math.max(0,c));
-        if(c<=0){deleting=false;p=(p+1)%phrases.length;return setTimeout(tick,260)}
-        setTimeout(tick,24);
-      };
-      typeEl.textContent='';
-      setTimeout(tick,420);
-    }
+    let phraseIndex = 0;
+    const renderPhrase = () => {
+      const words = phrases[phraseIndex];
+      kineticEl.innerHTML = words.map((word,i)=>`<span class="kinetic-word" style="--word-delay:${i*150}ms">${word}</span>`).join('<span class="kinetic-space"> </span>');
+      if (reduced) return;
+      setTimeout(()=>{
+        kineticEl.classList.add('kinetic-out');
+        setTimeout(()=>{
+          phraseIndex=(phraseIndex+1)%phrases.length;
+          kineticEl.classList.remove('kinetic-out');
+          renderPhrase();
+        },430);
+      },2300);
+    };
+    renderPhrase();
   }
 
   const renderMetrics=()=>{const el=$('#hero-metrics');if(!el)return;el.innerHTML=D.hero.highlights.map(x=>`<div class="metric"><strong data-count="${esc(x.value)}">0</strong><span>${esc(x.label)}</span></div>`).join('');const counterIO=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const n=e.target, raw=n.dataset.count, target=parseFloat(raw); if(Number.isNaN(target)){n.textContent=raw;return} let start=0; const dur=900,t0=performance.now(); const f=t=>{const p=Math.min(1,(t-t0)/dur),v=target*p; n.textContent=raw.includes('.')?v.toFixed(2):Math.round(v); if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f);counterIO.unobserve(n)}),{threshold:.5});$$('[data-count]').forEach(x=>counterIO.observe(x))};
@@ -185,7 +186,6 @@
 
   // Home
   if(page==='home'){
-    $('#hero-name') && ($('#hero-name').innerHTML='<span class="name-line">DEWAN NAFIUL</span><br><span class="outline name-line">ISLAM NOOR</span>');
     $('#hero-intro') && ($('#hero-intro').textContent=D.hero.intro);
     // Photo embedded in index.html is the failsafe; use assets path only after it loads.
     const heroPhoto=$('#profile-image');

@@ -824,3 +824,68 @@ body[data-page="home"] .hero-grid>.reveal.visible{opacity:1!important;transform:
   .ambient-orbs i,.hero-reveal,.current-focus-card::after,.live-dot,.research-active,.internship-active,body[data-page="home"] .portrait-card,.git-item:first-child::after{animation:none!important}
   body[data-page="home"] .hero-reveal,body[data-page="home"] .eyebrow,body[data-page="home"] #hero-name .name-line,body[data-page="home"] .hero-role,body[data-page="home"] .hero-intro,body[data-page="home"] .hero .actions,body[data-page="home"] .hero-social{opacity:1!important;filter:none!important;transform:none!important}
 }
+
+
+/* ==============================================================
+   v13 — KINETIC FIRST-IMPRESSION HERO
+   ============================================================== */
+body[data-page="home"] .hero{padding-top:58px}
+body[data-page="home"] .hero-grid{grid-template-columns:minmax(0,1.34fr) minmax(285px,.66fr);gap:clamp(24px,3.4vw,52px);align-items:center}
+body[data-page="home"] .hero-grid>div:first-child{min-width:0}
+body[data-page="home"] .eyebrow{margin-bottom:16px}
+body[data-page="home"] .kinetic-name{display:flex;align-items:baseline;gap:.16em;white-space:nowrap;margin:0 0 28px;font-size:clamp(3rem,4.65vw,5.65rem)!important;line-height:.9!important;letter-spacing:-.07em!important;overflow:visible!important}
+body[data-page="home"] .name-word{display:inline-block;opacity:0;filter:blur(12px);transform:translateY(24px) scale(.94);animation:wordIdentityIn .78s cubic-bezier(.18,.82,.22,1) forwards}
+body[data-page="home"] .name-word:nth-child(1){animation-delay:.06s}
+body[data-page="home"] .name-word:nth-child(2){animation-delay:.20s}
+body[data-page="home"] .name-word:nth-child(3){animation-delay:.34s}
+body[data-page="home"] .name-word:nth-child(4){animation-delay:.48s}
+body[data-page="home"] .accent-word{background:linear-gradient(100deg,#5b6df6,#3184dc 48%,#18a999);background-size:180% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:wordIdentityIn .78s .48s cubic-bezier(.18,.82,.22,1) forwards,kineticGradient 5s 1.2s ease-in-out infinite}
+@keyframes wordIdentityIn{to{opacity:1;filter:blur(0);transform:none}}
+@keyframes kineticGradient{50%{background-position:100% 0}}
+
+body[data-page="home"] .kinetic-status{display:flex;align-items:baseline;gap:14px;min-height:54px;margin:0 0 10px;font-family:var(--mono);text-transform:uppercase}
+body[data-page="home"] .kinetic-prompt{font-size:.88rem;font-weight:600;color:#6a748c;letter-spacing:.12em}
+body[data-page="home"] .kinetic-phrase{display:flex;flex-wrap:wrap;align-items:baseline;gap:.34em;font-size:clamp(1.15rem,2vw,1.72rem);font-weight:700;letter-spacing:-.04em;color:#3f55db;transition:opacity .35s ease,filter .35s ease,transform .35s ease}
+body[data-page="home"] .kinetic-word{display:inline-block;opacity:0;filter:blur(8px);transform:translateY(12px) rotateX(30deg);animation:kineticWordIn .54s var(--word-delay) cubic-bezier(.2,.82,.2,1) forwards}
+@keyframes kineticWordIn{to{opacity:1;filter:blur(0);transform:none}}
+body[data-page="home"] .kinetic-phrase.kinetic-out{opacity:0;filter:blur(7px);transform:translateY(-8px)}
+body[data-page="home"] .now-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 19px;font:500 .72rem/1.5 var(--mono);color:#66728a;letter-spacing:.01em}
+body[data-page="home"] .now-line i{font-style:normal;color:#a5adbd}
+body[data-page="home"] .now-dot{width:7px;height:7px;border-radius:50%;background:#18a999;box-shadow:0 0 0 0 rgba(24,169,153,.32);animation:nowPulse 2.2s ease-out infinite}
+@keyframes nowPulse{55%{box-shadow:0 0 0 9px rgba(24,169,153,0)}}
+body[data-page="home"] .hero-intro{max-width:720px;margin:0 0 26px;font-size:1rem;line-height:1.72}
+
+body[data-page="home"] .hero-visual{max-width:330px!important;width:100%!important;margin-left:auto!important;gap:11px!important}
+body[data-page="home"] .portrait-card{width:min(100%,310px)!important;border-radius:28px;animation:portraitBreathe 6s ease-in-out infinite!important}
+body[data-page="home"] .portrait-card img{max-height:380px!important;aspect-ratio:4/5!important;object-position:center 31%!important}
+@keyframes portraitBreathe{0%,100%{transform:rotate(.35deg) translateY(0)}50%{transform:rotate(-.2deg) translateY(-6px)}}
+body[data-page="home"] .hero-now-card{width:min(100%,310px);padding:14px 15px;border:1px solid var(--line);border-radius:17px;background:color-mix(in srgb,var(--panel) 94%,transparent);box-shadow:0 16px 36px rgba(64,82,126,.09);backdrop-filter:blur(10px)}
+body[data-page="home"] .hero-now-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;font:600 .62rem var(--mono);letter-spacing:.08em;color:#63708a}
+body[data-page="home"] .hero-now-item{display:grid;gap:2px;padding:8px 0;border-top:1px solid color-mix(in srgb,var(--line) 72%,transparent)}
+body[data-page="home"] .hero-now-item b{font:650 .72rem var(--mono);color:#26334c}
+body[data-page="home"] .hero-now-item span{font:500 .66rem/1.45 var(--mono);color:#768097}
+[data-theme="dark"] body[data-page="home"] .hero-now-item b{color:var(--text)}
+
+/* Turn first screen into a more intentional composition. */
+body[data-page="home"] .hero>.metric-row{margin-top:40px}
+
+@media(max-width:1180px) and (min-width:820px){
+  body[data-page="home"] .kinetic-name{font-size:clamp(2.5rem,4.25vw,4.25rem)!important}
+  body[data-page="home"] .hero-grid{grid-template-columns:minmax(0,1.28fr) minmax(250px,.72fr)}
+  body[data-page="home"] .hero-visual{max-width:285px!important}
+  body[data-page="home"] .portrait-card,body[data-page="home"] .hero-now-card{width:100%!important}
+  body[data-page="home"] .portrait-card img{max-height:340px!important}
+}
+@media(max-width:819px){
+  body[data-page="home"] .hero-grid{grid-template-columns:1fr;gap:27px}
+  body[data-page="home"] .kinetic-name{white-space:normal;display:block;font-size:clamp(2.45rem,11vw,4.2rem)!important;line-height:.94!important}
+  body[data-page="home"] .name-word{margin-right:.14em}
+  body[data-page="home"] .hero-visual{margin-inline:auto!important;max-width:340px!important}
+  body[data-page="home"] .portrait-card{width:min(76vw,310px)!important}
+  body[data-page="home"] .hero-now-card{width:min(92vw,340px)}
+}
+@media(max-width:480px){
+  body[data-page="home"] .kinetic-status{gap:9px;align-items:flex-start}
+  body[data-page="home"] .kinetic-phrase{font-size:1.08rem;line-height:1.45}
+  body[data-page="home"] .now-line{font-size:.65rem;gap:7px}
+}

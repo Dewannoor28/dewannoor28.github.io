@@ -526,6 +526,12 @@ const PORTFOLIO_DATA = {
       caption: "Sharing research ideas publicly is where preparation, confidence and technical clarity meet."
     },
     {
+      title: "IEEE SPICSCON 2026 Conference",
+      category: "Research",
+      image: "assets/images/research-spicscon-2026.webp",
+      caption: "Conference participation at IEEE SPICSCON 2026 reflects research visibility, academic engagement and a growing presentation journey."
+    },
+    {
       title: "Award Ceremony",
       category: "Achievement",
       image: "assets/images/gallery-award.webp",
