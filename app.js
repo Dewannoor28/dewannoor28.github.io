@@ -233,7 +233,7 @@
     };
     const go=step=>{index=(index+step+cards.length)%cards.length;update();restart();};
     const stop=()=>{if(timer){clearInterval(timer);timer=null;}};
-    const start=()=>{if(reducedMotion||cards.length<2)return;stop();timer=setInterval(()=>{index=(index+1)%cards.length;update();},4200);};
+    const start=()=>{if(cards.length<2)return;stop();timer=setInterval(()=>{index=(index+1)%cards.length;update();},4200);};
     const restart=()=>{stop();start();};
 
     prev?.addEventListener('click',()=>go(-1));
