@@ -349,6 +349,38 @@
   if(page==='experience'){renderExperience()}
   if(page==='education'){renderEducation();renderSkills()}
   if(page==='achievements'){renderAchievements();renderLeadership();renderGallery()}
+  // v28: scroll-triggered sequence. Content remains visible unless this JS successfully activates it.
+  const setupScrollSequence=()=>{
+    const sections=$$('main > section:not(.hero)');
+    const selector='.section-head,.research-row,.project-card,.publication,.skill-box,.education-card,.leadership-grid>.media-card,.achievement-grid>.media-card,.photo-reel,.journey-slider,.gallery-item,.contact-shell,.metric';
+    const targets=[];
+    sections.forEach(section=>{
+      const items=$$(selector,section);
+      items.forEach((el,i)=>{
+        el.style.setProperty('--scroll-delay', Math.min(i,8)*85+'ms');
+        el.classList.add('scroll-seq-ready');
+        targets.push(el);
+      });
+    });
+    if(!targets.length)return;
+    if(!('IntersectionObserver' in window)){
+      targets.forEach(el=>el.classList.add('scroll-seq-in'));
+      return;
+    }
+    const seqIO=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting)return;
+        entry.target.classList.add('scroll-seq-in');
+        seqIO.unobserve(entry.target);
+      });
+    },{threshold:.12,rootMargin:'0px 0px -7% 0px'});
+    targets.forEach(el=>{
+      const r=el.getBoundingClientRect();
+      if(r.top < innerHeight*.94 && r.bottom > 0) el.classList.add('scroll-seq-in');
+      else seqIO.observe(el);
+    });
+  };
+
   const activateRevealFailSafe=()=>{
     const targets=$$('.reveal,.stagger');
     targets.forEach(el=>{
@@ -362,7 +394,7 @@
       $$('.motion-ready:not(.motion-in)').forEach(el=>el.classList.add('motion-in'));
     },1800);
   };
-  requestAnimationFrame(()=>{registerDynamicMotion();activateRevealFailSafe();});
+  requestAnimationFrame(()=>{registerDynamicMotion();activateRevealFailSafe();setupScrollSequence();});
 
   if(page==='project-detail'){
     const id=new URLSearchParams(location.search).get('id');const p=D.projects.find(x=>slug(x.title)===id)||D.projects[0];
