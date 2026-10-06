@@ -24,10 +24,13 @@
     document.documentElement.dataset.theme = next; try { localStorage.setItem('dn-theme-v4', next); } catch (_) {} paintTheme();
   });
 
-  // v32: lightweight multilingual translator (loads Google Translate only when needed).
-  const languageNames = {en:'EN',bn:'BN',hi:'HI',ar:'AR',ja:'JA'};
+  // v33: reliable multilingual translator with persisted language + reload flow.
+  const languageNames = {en:'EN',bn:'BN',hi:'HI',ar:'AR',ja:'JA',de:'DE'};
   const savedLanguage = (()=>{try{return localStorage.getItem('dn-language')||'en'}catch(_){return 'en'}})();
   let activeLanguage = languageNames[savedLanguage] ? savedLanguage : 'en';
+  let translateLoading=false;
+  let translateKickTimer=null;
+  let translateRetries=0;
 
   const setLanguageDirection = lang => {
     document.documentElement.lang = lang === 'en' ? 'en' : lang;
@@ -35,6 +38,15 @@
     document.body.classList.toggle('rtl-language', lang === 'ar');
   };
   setLanguageDirection(activeLanguage);
+
+  const writeTranslateCookie = lang => {
+    const value = lang === 'en' ? '' : `/en/${lang}`;
+    const maxAge = lang === 'en' ? 'Max-Age=0' : 'Max-Age=31536000';
+    document.cookie=`googtrans=${value}; path=/; SameSite=Lax; ${maxAge}`;
+    try{
+      document.cookie=`googtrans=${value}; path=/; domain=${location.hostname}; SameSite=Lax; ${maxAge}`;
+    }catch(_){}
+  };
 
   const clearTranslateCookies = () => {
     const expires='Thu, 01 Jan 1970 00:00:00 GMT';
@@ -75,22 +87,50 @@
     });
   };
 
-  let translateLoading=false;
+  const applyGoogleLanguage=(lang,attempt=0)=>{
+    if(lang==='en') return;
+    const combo=document.querySelector('.goog-te-combo');
+    if(combo){
+      if(combo.value!==lang){
+        combo.value=lang;
+        combo.dispatchEvent(new Event('change',{bubbles:true}));
+      }
+      document.body.classList.add('translation-ready');
+      return;
+    }
+    if(attempt<120)setTimeout(()=>applyGoogleLanguage(lang,attempt+1),250);
+  };
+
+  const scheduleTranslationKick = (delay=180) => {
+    if(activeLanguage==='en')return;
+    clearTimeout(translateKickTimer);
+    translateKickTimer=setTimeout(()=>{
+      protectOwnName();
+      applyGoogleLanguage(activeLanguage);
+    },delay);
+  };
+
   window.googleTranslateElementInit=()=>{
     if(!window.google?.translate?.TranslateElement)return;
     const host=$('#google_translate_element');
     if(host && !host.dataset.ready){
       new google.translate.TranslateElement({
         pageLanguage:'en',
-        includedLanguages:'bn,hi,ar,ja',
-        autoDisplay:false
+        includedLanguages:'bn,de,hi,ar,ja',
+        autoDisplay:false,
+        multilanguagePage:true
       },'google_translate_element');
       host.dataset.ready='1';
     }
+    scheduleTranslationKick(80);
+    setTimeout(()=>scheduleTranslationKick(0),500);
+    setTimeout(()=>scheduleTranslationKick(0),1400);
+    setTimeout(()=>scheduleTranslationKick(0),3000);
     document.dispatchEvent(new Event('dn-translate-ready'));
   };
 
   const loadTranslator=()=>{
+    if(activeLanguage==='en')return;
     if(window.google?.translate?.TranslateElement){
       window.googleTranslateElementInit();
       return;
@@ -101,20 +141,12 @@
     script.id='dn-google-translate-script';
     script.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     script.async=true;
-    script.onerror=()=>{translateLoading=false;document.body.classList.add('translator-unavailable')};
+    script.defer=true;
+    script.onerror=()=>{
+      translateLoading=false;
+      document.body.classList.add('translator-unavailable');
+    };
     document.head.append(script);
-  };
-
-  const applyGoogleLanguage=(lang,attempt=0)=>{
-    const combo=document.querySelector('.goog-te-combo');
-    if(combo){
-      if(combo.value!==lang){
-        combo.value=lang;
-        combo.dispatchEvent(new Event('change',{bubbles:true}));
-      }
-      return;
-    }
-    if(attempt<35)setTimeout(()=>applyGoogleLanguage(lang,attempt+1),120);
   };
 
   const setupLanguageSwitcher=()=>{
@@ -133,19 +165,26 @@
       const open=!menu.classList.contains('open');
       menu.classList.toggle('open',open);
       toggle.setAttribute('aria-expanded',String(open));
-      if(open && activeLanguage!=='en')loadTranslator();
     });
     document.addEventListener('click',e=>{if(!wrap.contains(e.target))close()});
     document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 
     $$('[data-lang]',menu).forEach(btn=>btn.addEventListener('click',()=>{
       const lang=btn.dataset.lang;
-      if(!languageNames[lang] || lang===activeLanguage){close();return;}
+      if(!languageNames[lang])return;
+      close();
+
+      // Re-selecting the same translated language refreshes a partially translated page.
+      if(lang===activeLanguage && lang!=='en'){
+        writeTranslateCookie(lang);
+        location.reload();
+        return;
+      }
+
       activeLanguage=lang;
       try{localStorage.setItem('dn-language',lang)}catch(_){}
       setLanguageDirection(lang);
       paint();
-      close();
 
       if(lang==='en'){
         clearTranslateCookies();
@@ -154,14 +193,33 @@
       }
 
       protectOwnName();
-      loadTranslator();
-      applyGoogleLanguage(lang);
+      writeTranslateCookie(lang);
+      location.reload();
     }));
 
-    document.addEventListener('dn-translate-ready',()=>applyGoogleLanguage(activeLanguage));
     if(activeLanguage!=='en'){
+      // The cookie makes Google Translate start in the correct target language after reload.
+      writeTranslateCookie(activeLanguage);
       protectOwnName();
       loadTranslator();
+
+      // Re-kick after page lifecycle events for slower mobile/tablet browsers.
+      addEventListener('load',()=>{
+        scheduleTranslationKick(100);
+        setTimeout(()=>scheduleTranslationKick(0),900);
+        setTimeout(()=>scheduleTranslationKick(0),2400);
+      },{once:true});
+      addEventListener('pageshow',()=>scheduleTranslationKick(160));
+
+      // Watch only briefly for late dynamic rendering, then disconnect to avoid translation loops.
+      if('MutationObserver' in window){
+        const observer=new MutationObserver(()=>{
+          if(translateRetries++>18){observer.disconnect();return;}
+          scheduleTranslationKick(220);
+        });
+        observer.observe(document.body,{childList:true,subtree:true});
+        setTimeout(()=>observer.disconnect(),7000);
+      }
     }
   };
 
