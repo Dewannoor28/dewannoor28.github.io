@@ -214,7 +214,49 @@
   const renderSkills=()=>{const j=$('#skills-json'),g=$('#skill-cloud'); if(j){const entries=Object.entries(D.skills).slice(0,5);j.innerHTML=`<span class="brace">{</span>\n${entries.map(([k,v])=>`  <span class="key">"${esc(k)}"</span>: [\n${v.slice(0,6).map((x,i)=>`    <span class="str">"${esc(x)}"</span>${i<v.slice(0,6).length-1?',':''}`).join('\n')}\n  ]`).join(',\n')}\n<span class="brace">}</span>`} if(g){g.innerHTML=Object.entries(D.skills).map(([k,v])=>`<div class="skill-box"><h4>${esc(k)}</h4><p>${v.join(' · ')}</p></div>`).join('')}};
   const renderLeadership=()=>{const el=$('#leadership-grid');if(!el)return;el.innerHTML=D.leadership.map(x=>`<article class="media-card ${x.image?'':'text-only'}">${x.image?`<img src="${esc(x.image)}" alt="${esc(x.organization)}" loading="lazy" decoding="async">`:''}<div class="body"><div class="role">${esc(x.currentRole)} · ${esc(x.period)}</div><h3>${esc(x.organization)}</h3><p>${esc(x.description)}</p>${x.roles?.length?`<p>${x.roles.map(r=>'• '+esc(r)).join('<br>')}</p>`:''}</div></article>`).join('')};
   const renderAchievements=()=>{const el=$('#achievement-grid');if(!el)return;el.innerHTML=D.achievements.map(x=>`<article class="media-card"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async"><div class="body"><div class="role">${esc(x.subtitle)}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`).join('')};
-  const renderJourney=()=>{const el=$('#journey-strip');if(!el)return;el.innerHTML=(D.heroSlides||[]).map((x,i)=>`<article class="journey-card" tabindex="0"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async" fetchpriority="low"><div class="journey-copy"><span>${String(i+1).padStart(2,'0')}</span><h3>${esc(x.title)}</h3><p>${esc(x.caption)}</p></div></article>`).join('')};
+  const renderJourney=()=>{const el=$('#journey-strip');if(!el)return;el.innerHTML=(D.heroSlides||[]).map((x,i)=>`<article class="journey-card journey-story-card" aria-hidden="${i===0?'false':'true'}"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="${i===0?'eager':'lazy'}" decoding="async" fetchpriority="${i===0?'high':'low'}"><div class="journey-copy"><span>${String(i+1).padStart(2,'0')} / ${esc((x.category||'Story').toUpperCase())}</span><h3>${esc(x.title)}</h3><p class="journey-caption">${esc(x.caption||'')}</p><p class="journey-story">${esc(x.story||x.caption||'')}</p></div></article>`).join('')};
+  const setupJourneySlider=()=>{
+    const viewport=$('#journey-slider'), track=$('#journey-strip');
+    if(!viewport||!track)return;
+    const cards=$$('.journey-story-card',track);
+    if(!cards.length)return;
+    const prev=$('#journey-prev'), next=$('#journey-next'), count=$('#journey-count');
+    let index=0, timer=null, touchX=null;
+
+    viewport.setAttribute('tabindex','0');
+    const update=()=>{
+      track.style.transform=`translate3d(-${index*100}%,0,0)`;
+      cards.forEach((card,i)=>card.setAttribute('aria-hidden',String(i!==index)));
+      if(count) count.textContent=`${index+1} / ${cards.length}`;
+    };
+    const stop=()=>{if(timer){clearInterval(timer);timer=null;}};
+    const start=()=>{if(cards.length<2)return;stop();timer=setInterval(()=>{index=(index+1)%cards.length;update();},5200);};
+    const go=step=>{index=(index+step+cards.length)%cards.length;update();stop();start();};
+
+    prev?.addEventListener('click',()=>go(-1));
+    next?.addEventListener('click',()=>go(1));
+    viewport.addEventListener('keydown',e=>{
+      if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
+      if(e.key==='ArrowRight'){e.preventDefault();go(1);}
+    });
+    viewport.addEventListener('mouseenter',stop);
+    viewport.addEventListener('mouseleave',start);
+    viewport.addEventListener('focusin',stop);
+    viewport.addEventListener('focusout',start);
+    viewport.addEventListener('touchstart',e=>{touchX=e.changedTouches[0]?.clientX??null;stop();},{passive:true});
+    viewport.addEventListener('touchend',e=>{
+      if(touchX===null)return;
+      const dx=(e.changedTouches[0]?.clientX??touchX)-touchX;
+      if(Math.abs(dx)>45) go(dx<0?1:-1);
+      touchX=null;
+      start();
+    },{passive:true});
+    document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+
+    update();
+    start();
+  };
+
   const renderPhotoReel=()=>{const el=$('#photo-reel-track');if(!el)return;const list=D.photoReel||[];el.innerHTML=list.map((x,i)=>`<figure class="photo-reel-card" aria-hidden="${i===0?'false':'true'}"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="${i===0?'eager':'lazy'}" decoding="async" fetchpriority="${i===0?'high':'low'}"><figcaption>${esc(x.title)}</figcaption></figure>`).join('')};
 
   const setupPhotoSlider=()=>{
@@ -294,7 +336,7 @@
       fullPhoto.src=D.site.profileImage;
     }
     $('#cv-button') && ($('#cv-button').href=D.site.cvFile);
-    renderMetrics(); renderMarquee(); renderResearchRows('#research-rows',4); renderProjects('#project-grid','featured'); renderPubs('#publication-list','Published'); renderEducation(); renderSkills(); renderLeadership(); renderAchievements(); renderPhotoReel(); setupPhotoSlider(); renderJourney(); renderGallery(); renderExperience(); setupTerminal();
+    renderMetrics(); renderMarquee(); renderResearchRows('#research-rows',4); renderProjects('#project-grid','featured'); renderPubs('#publication-list','Published'); renderEducation(); renderSkills(); renderLeadership(); renderAchievements(); renderPhotoReel(); setupPhotoSlider(); renderJourney(); setupJourneySlider(); renderGallery(); renderExperience(); setupTerminal();
   }
 
   // Filters on listing pages/home
