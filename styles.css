@@ -1,10 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root{
   --bg:#f7f8fc;--bg2:#f2f5fb;--panel:rgba(255,255,255,.82);--panel2:#eef3fb;--text:#172033;--muted:#667085;
   --line:rgba(55,73,105,.13);--accent:#5b6df6;--accent2:#18a999;--accent3:#a65eea;--danger:#e45f76;
   --shadow:0 24px 70px rgba(67,84,128,.13);--radius:24px;--radius-sm:14px;--max:1180px;
-  --display:'Outfit',sans-serif;--body:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
+  --display:'Inter',sans-serif;--body:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
 }
 [data-theme="light"]{--bg:#f7f8fc;--bg2:#f2f5fb;--panel:rgba(255,255,255,.82);--panel2:#eef3fb;--text:#172033;--muted:#667085;--line:rgba(55,73,105,.13);--accent:#5b6df6;--accent2:#18a999;--accent3:#a65eea;--shadow:0 24px 70px rgba(67,84,128,.13)}
 [data-theme="dark"]{--bg:#172033;--bg2:#1d2940;--panel:rgba(31,44,67,.88);--panel2:#25334d;--text:#f7f9ff;--muted:#b1bdd2;--line:rgba(235,241,255,.13);--accent:#9ba8ff;--accent2:#65d8ca;--accent3:#d4a6ff;--shadow:0 24px 72px rgba(16,24,40,.28)}
@@ -731,3 +730,97 @@ body[data-page="home"] #typing-role{font-family:var(--mono);color:#4356dc;font-w
 body[data-page="home"] .caret {display:inline-block;flex:none;width:3px;height:1.12em;vertical-align:middle;margin-left:1px;border-radius:2px;background:#485cde;animation:blink .72s steps(1,end) infinite}
 body[data-page="home"] .status-code-card {box-shadow:0 18px 46px rgba(64,82,126,.12)}
 /* Do not stack at browser width >= 820px even if prior responsive rules set .hero-grid to one column. */
+
+
+/* ==============================================================
+   v12 PERFORMANCE + MOTION
+   Fast first paint, visible motion, current-status hero.
+   ============================================================== */
+#code-canvas,.boot{display:none!important}
+body.is-booting{overflow:auto!important}
+
+/* Lightweight animated ambience: CSS only, no continuous canvas redraw. */
+.ambient-orbs{position:fixed;inset:0;z-index:-4;pointer-events:none;overflow:hidden}
+.ambient-orbs i{position:absolute;border-radius:999px;filter:blur(28px);opacity:.16;will-change:transform}
+.ambient-orbs i:nth-child(1){width:360px;height:360px;background:#6174ff;left:-120px;top:10vh;animation:orbOne 13s ease-in-out infinite alternate}
+.ambient-orbs i:nth-child(2){width:310px;height:310px;background:#23b7a5;right:-90px;top:28vh;animation:orbTwo 16s ease-in-out infinite alternate}
+.ambient-orbs i:nth-child(3){width:260px;height:260px;background:#a96bea;left:48%;bottom:-100px;animation:orbThree 18s ease-in-out infinite alternate}
+@keyframes orbOne{to{transform:translate3d(80px,60px,0) scale(1.12)}}
+@keyframes orbTwo{to{transform:translate3d(-70px,-35px,0) scale(.9)}}
+@keyframes orbThree{to{transform:translate3d(55px,-65px,0) scale(1.14)}}
+
+/* Hero: immediate visibility + deliberate animation. */
+body[data-page="home"] .hero-grid>.reveal{opacity:1!important;transform:none!important;filter:none!important}
+body[data-page="home"] .hero-reveal{opacity:0;filter:blur(10px);transform:scale(.965);animation:heroVisualIn .78s .26s cubic-bezier(.18,.78,.22,1) forwards}
+body[data-page="home"] .eyebrow{opacity:0;animation:heroSoftIn .55s .08s ease forwards}
+body[data-page="home"] #hero-name .name-line{display:inline-block;opacity:0;filter:blur(10px);transform:scale(.975);transform-origin:left center;animation:heroNameIn .72s cubic-bezier(.2,.8,.2,1) forwards}
+body[data-page="home"] #hero-name .name-line:first-child{animation-delay:.12s}
+body[data-page="home"] #hero-name .name-line:last-child{animation-delay:.24s}
+body[data-page="home"] .hero-role{opacity:0;animation:heroSoftIn .55s .42s ease forwards}
+body[data-page="home"] .hero-intro{opacity:0;animation:heroSoftIn .58s .52s ease forwards}
+body[data-page="home"] .hero .actions{opacity:0;animation:heroSoftIn .58s .62s ease forwards}
+body[data-page="home"] .hero-social{opacity:0;animation:heroSoftIn .58s .70s ease forwards}
+@keyframes heroNameIn{to{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes heroVisualIn{to{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes heroSoftIn{from{opacity:0;filter:blur(5px);transform:scale(.985)}to{opacity:1;filter:none;transform:scale(1)}}
+
+.hero-role{min-height:36px}
+.hero-role>span:first-child{font-size:.76em;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+#typing-role{color:#4459db!important;font-weight:700!important}
+.caret{width:3px!important;border-radius:2px}
+
+/* Clean current status card under portrait */
+.current-focus-card{width:min(100%,360px);background:rgba(255,255,255,.86);border:1px solid rgba(91,109,246,.14);border-radius:18px;padding:15px;box-shadow:0 18px 48px rgba(67,84,128,.10);backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.current-focus-card::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 25%,rgba(91,109,246,.055),transparent 65%);transform:translateX(-120%);animation:focusSheen 5.5s ease-in-out infinite}
+@keyframes focusSheen{0%,66%{transform:translateX(-120%)}88%,100%{transform:translateX(120%)}}
+.focus-head{display:flex;align-items:center;gap:8px;font:600 .64rem var(--mono);letter-spacing:.1em;color:#5c6a84;margin-bottom:9px;position:relative;z-index:1}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#26b88f;box-shadow:0 0 0 0 rgba(38,184,143,.32);animation:livePulse 2s infinite}
+@keyframes livePulse{55%{box-shadow:0 0 0 8px rgba(38,184,143,0)}}
+.focus-row{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:center;border-top:1px solid rgba(55,73,105,.10);padding:11px 2px;position:relative;z-index:1}
+.focus-index{font:600 .62rem var(--mono);color:#6a78d4}
+.focus-row strong{display:block;font:700 .87rem var(--body);color:var(--text)}
+.focus-row small{display:block;margin-top:2px;font:500 .62rem/1.45 var(--mono);color:var(--muted)}
+.research-active{animation:focusGlowA 4.8s ease-in-out infinite}.internship-active{animation:focusGlowB 4.8s 2.4s ease-in-out infinite}
+@keyframes focusGlowA{0%,100%{background:transparent}45%{background:rgba(91,109,246,.055)}}
+@keyframes focusGlowB{0%,100%{background:transparent}45%{background:rgba(24,169,153,.06)}}
+
+/* Portrait stays crisp but light. */
+body[data-page="home"] .portrait-card{width:min(100%,330px)!important;animation:portraitBreath 6.2s ease-in-out infinite!important;will-change:transform}
+@keyframes portraitBreath{0%,100%{transform:rotate(.35deg) scale(1)}50%{transform:rotate(-.2deg) scale(1.012)}}
+body[data-page="home"] .portrait-card img{aspect-ratio:3/4!important;max-height:415px!important;object-position:center 30%!important}
+body[data-page="home"] .hero-visual{max-width:370px!important;gap:12px!important}
+
+/* Scroll reveals: no directional sliding; blur + scale only. */
+.reveal{opacity:0!important;transform:scale(.975)!important;filter:blur(9px)!important;transition:opacity .68s cubic-bezier(.2,.76,.22,1),transform .68s cubic-bezier(.2,.76,.22,1),filter .68s cubic-bezier(.2,.76,.22,1)!important}
+.reveal.visible{opacity:1!important;transform:scale(1)!important;filter:blur(0)!important}
+body[data-page="home"] .hero-grid>.reveal.visible{opacity:1!important;transform:none!important;filter:none!important}
+.stagger>*{opacity:0!important;transform:scale(.955)!important;filter:blur(7px)!important}
+.stagger.visible>*{animation:v12Stagger .58s cubic-bezier(.18,.78,.22,1) forwards!important}
+.stagger.visible>*:nth-child(2){animation-delay:.07s!important}.stagger.visible>*:nth-child(3){animation-delay:.14s!important}.stagger.visible>*:nth-child(4){animation-delay:.21s!important}.stagger.visible>*:nth-child(5){animation-delay:.28s!important}.stagger.visible>*:nth-child(6){animation-delay:.35s!important}
+@keyframes v12Stagger{to{opacity:1;transform:scale(1);filter:blur(0)}}
+.motion-ready{opacity:0!important;transform:scale(.965)!important;filter:blur(6px)!important}
+.motion-ready.motion-in{animation:v12Stagger .62s cubic-bezier(.18,.78,.22,1) var(--motion-delay,0ms) forwards!important}
+
+/* Current internship node visual marker in experience timeline. */
+.git-item:first-child::after{content:"CURRENT";display:inline-flex;margin-top:10px;padding:5px 8px;border-radius:999px;background:rgba(24,169,153,.10);border:1px solid rgba(24,169,153,.24);color:#148776;font:700 .58rem var(--mono);letter-spacing:.08em;animation:currentBadge 2.4s ease-in-out infinite}
+@keyframes currentBadge{50%{box-shadow:0 0 0 7px rgba(24,169,153,0),0 0 18px rgba(24,169,153,.15)}}
+
+/* GPU-friendly hover only. */
+.card,.media-card,.social-link,.btn{will-change:transform}
+
+/* Mobile: motion stays visible but cheap; no custom cursor. */
+@media(max-width:819px){
+  .ambient-orbs i{filter:blur(38px);opacity:.10;animation-duration:22s!important}
+  body[data-page="home"] .hero-visual{width:min(100%,370px)!important}
+  body[data-page="home"] .portrait-card{width:min(72vw,310px)!important}
+  .current-focus-card{width:min(94vw,360px)}
+}
+@media(max-width:650px){
+  .cursor,.cursor-dot{display:none!important}
+  .noise{display:none}
+  body[data-page="home"] .hero{padding-top:28px}
+}
+@media(prefers-reduced-motion:reduce){
+  .ambient-orbs i,.hero-reveal,.current-focus-card::after,.live-dot,.research-active,.internship-active,body[data-page="home"] .portrait-card,.git-item:first-child::after{animation:none!important}
+  body[data-page="home"] .hero-reveal,body[data-page="home"] .eyebrow,body[data-page="home"] #hero-name .name-line,body[data-page="home"] .hero-role,body[data-page="home"] .hero-intro,body[data-page="home"] .hero .actions,body[data-page="home"] .hero-social{opacity:1!important;filter:none!important;transform:none!important}
+}

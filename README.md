@@ -68,8 +68,8 @@ At present, my work is centered around two complementary tracks:
 The portfolio itself is built with a lightweight static architecture suitable for GitHub Pages:
 
 - **HTML5** — page structure and semantic content
-- **CSS3** — responsive layouts, visual design, animation, and interactions
-- **JavaScript** — dynamic content, typing effects, command palette, terminal interaction, filtering, and page behavior
+- **CSS3** — responsive layouts, lightweight motion, visual design, and interactions
+- **JavaScript** — dynamic content, typewriter status, command palette, terminal interaction, filtering, and page behavior
 - **GitHub Pages** — public hosting
 
 Most portfolio content is maintained centrally in `data.js`, while the main styling and interaction logic are handled by `styles.css` and `app.js`.

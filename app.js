@@ -52,71 +52,9 @@
     $$('a,button,.gallery-item,.card').forEach(el => { el.addEventListener('mouseenter',()=>c?.classList.add('hover')); el.addEventListener('mouseleave',()=>c?.classList.remove('hover')); });
   }
 
-  // Canvas coding network
-  const canvas = $('#code-canvas');
-  if (canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const ctx = canvas.getContext('2d'); let nodes=[]; let raf; let mx=-999,my=-999;
-    const resize = () => { const dpr=Math.min(devicePixelRatio||1,2); canvas.width=innerWidth*dpr; canvas.height=innerHeight*dpr; canvas.style.width=innerWidth+'px'; canvas.style.height=innerHeight+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); nodes=Array.from({length:Math.min(matchMedia('(pointer:coarse)').matches?34:70,Math.max(14,Math.floor(innerWidth/20)))},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18})); };
-    const draw = () => { ctx.clearRect(0,0,innerWidth,innerHeight); ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#79ffc1'; nodes.forEach((n,i)=>{ n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>innerWidth)n.vx*=-1;if(n.y<0||n.y>innerHeight)n.vy*=-1; const dist=Math.hypot(n.x-mx,n.y-my); if(dist<120){n.x+=(n.x-mx)*.003;n.y+=(n.y-my)*.003} ctx.globalAlpha=.28;ctx.beginPath();ctx.arc(n.x,n.y,1.5,0,Math.PI*2);ctx.fill(); for(let j=i+1;j<nodes.length;j++){const o=nodes[j],dd=Math.hypot(n.x-o.x,n.y-o.y);if(dd<120){ctx.globalAlpha=(1-dd/120)*.09;ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(o.x,o.y);ctx.strokeStyle=ctx.fillStyle;ctx.stroke()}} }); ctx.globalAlpha=1; raf=requestAnimationFrame(draw); };
-    resize(); draw(); addEventListener('resize',resize); addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY},{passive:true});
-  }
-
   // Reveal animations
   const io = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.12});
   $$('.reveal,.stagger').forEach(el => io.observe(el));
-
-  // v8 Smart scene scroll: section-by-section on desktop, native touch scroll on mobile.
-  if(page==='home' && innerWidth>1100 && matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
-    const scenes=$$('main > .hero, main > .section');
-    const sceneLabels=['home','about','research','projects','publications','stack','terminal','education','leadership','milestones','gallery','contact'];
-    const rail=document.createElement('nav'); rail.className='section-rail'; rail.setAttribute('aria-label','Homepage sections');
-    rail.innerHTML=scenes.map((_,i)=>`<button class="section-dot${i===0?' active':''}" type="button" data-index="${i}" data-label="${sceneLabels[i]||('section '+(i+1))}" aria-label="Go to ${sceneLabels[i]||('section '+(i+1))}"></button>`).join('');
-    document.body.appendChild(rail);
-    const dots=$$('.section-dot',rail); let current=0, lock=false, unlockTimer;
-    const mark=i=>{current=Math.max(0,Math.min(scenes.length-1,i));dots.forEach((d,n)=>d.classList.toggle('active',n===current));scenes.forEach((scene,n)=>scene.classList.toggle('scene-current',n===current));};
-    const visibleIndex=()=>{
-      let best=0,dist=Infinity;
-      scenes.forEach((s,i)=>{const r=s.getBoundingClientRect(),d=Math.abs(r.top-76);if(d<dist){dist=d;best=i}});return best;
-    };
-    const go=i=>{
-      i=Math.max(0,Math.min(scenes.length-1,i)); if(i===current && Math.abs(scenes[i].getBoundingClientRect().top-76)<8)return;
-      mark(i); lock=true; document.body.classList.add('section-transitioning'); scenes[i].scrollIntoView({behavior:'smooth',block:'start'});
-      clearTimeout(unlockTimer); unlockTimer=setTimeout(()=>{lock=false;document.body.classList.remove('section-transitioning')},820);
-    };
-    dots.forEach((d,i)=>d.addEventListener('click',()=>go(i)));
-    const observer=new IntersectionObserver(entries=>{if(lock)return;const hit=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(hit)mark(scenes.indexOf(hit.target));},{threshold:[.25,.45,.65]});
-    scenes.forEach(s=>observer.observe(s));
-    addEventListener('wheel',e=>{
-      if(lock || Math.abs(e.deltaY)<22 || e.ctrlKey || e.metaKey) return;
-      if(e.target.closest('input,textarea,.terminal,.command,.image-modal,[data-native-scroll]')) return;
-      const i=visibleIndex(), s=scenes[i], r=s.getBoundingClientRect();
-      // Tall scenes keep native scrolling until the active edge is reached.
-      const tall=r.height>innerHeight*1.06;
-      const header=76, bottomGap=r.bottom-innerHeight;
-      if(tall){
-        if(e.deltaY>0 && bottomGap>22) return;
-        if(e.deltaY<0 && r.top<header-22) return;
-      }
-      const next=i+(e.deltaY>0?1:-1);
-      if(next<0||next>=scenes.length) return;
-      e.preventDefault(); go(next);
-    },{passive:false});
-  }
-
-  // Boot intro on homepage (visible on refresh; cache-busted in v7)
-  const boot = $('#boot');
-  if (boot) {
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ boot.remove(); document.body.classList.remove('is-booting'); }
-    else {
-      const lines = [
-        ['dewan@portfolio:~$ ./initialize.sh',''],
-        ['[✓] profile.loaded','ok'],['[✓] research.loaded','ok'],['[✓] projects.loaded','ok'],['[✓] publications.loaded','ok'],['[✓] interface.connected','ok'],
-        ['launching PORTFOLIO_OS ...','dim']
-      ];
-      const log=$('#boot-log'); let i=0;
-      const next=()=>{ if(i<lines.length){ const p=document.createElement('div');p.className='boot-line '+lines[i][1];p.textContent=lines[i][0];log.appendChild(p);i++;setTimeout(next,i===1?300:220);} else setTimeout(()=>{boot.classList.add('hidden');document.body.classList.remove('is-booting');setTimeout(()=>boot.remove(),700)},450)}; next();
-    }
-  }
 
   // Command palette
   const commands = [
@@ -179,78 +117,31 @@
   };
   socials('#hero-social',5); socials('#footer-social');
 
-  // v11: independent letter-by-letter status cycle; reliably restarts on every page load.
-  const typeWords = ['working on AI/ML research', 'interning in mobile app security'];
+  // v12: fast, visible hero typewriter. Starts immediately after first paint.
   const typeEl = $('#typing-role');
   if (typeEl) {
-    let phraseIndex=0, charIndex=0, removing=false;
-    const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(reducedMotion){
-      // Accessible, non-flashing alternative if the visitor's OS requests reduced motion.
-      typeEl.textContent='AI/ML research · Byte Capsule security internship';
+    const phrases = ['working on AI/ML research', 'interning in mobile app security'];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      let i=0; typeEl.textContent=phrases[0];
+      setInterval(()=>{i=(i+1)%phrases.length;typeEl.classList.remove('status-crossfade');void typeEl.offsetWidth;typeEl.textContent=phrases[i];typeEl.classList.add('status-crossfade')},3200);
     } else {
-      typeEl.textContent='';
-      const animateTyping=()=>{
-        const phrase=typeWords[phraseIndex];
-        if(!removing){
-          charIndex=Math.min(phrase.length,charIndex+1);
-          typeEl.textContent=phrase.slice(0,charIndex);
-          if(charIndex===phrase.length){removing=true;setTimeout(animateTyping,1750);return;}
-          setTimeout(animateTyping,58);
-        } else {
-          charIndex=Math.max(0,charIndex-1);
-          typeEl.textContent=phrase.slice(0,charIndex);
-          if(charIndex===0){removing=false;phraseIndex=(phraseIndex+1)%typeWords.length;setTimeout(animateTyping,240);return;}
-          setTimeout(animateTyping,27);
+      let p=0, c=0, deleting=false;
+      const tick=()=>{
+        const text=phrases[p];
+        if(!deleting){
+          c++; typeEl.textContent=text.slice(0,c);
+          if(c>=text.length){deleting=true;return setTimeout(tick,1450)}
+          return setTimeout(tick,48);
         }
+        c--; typeEl.textContent=text.slice(0,Math.max(0,c));
+        if(c<=0){deleting=false;p=(p+1)%phrases.length;return setTimeout(tick,260)}
+        setTimeout(tick,24);
       };
-      // Start after the terminal boot overlay vanishes, so visitors can actually SEE the letters type.
-      const bootOverlay=document.querySelector('#boot');
-      if(bootOverlay && !bootOverlay.classList.contains('hidden')){
-        const watchBoot=new MutationObserver(()=>{
-          if(bootOverlay.classList.contains('hidden')){
-            watchBoot.disconnect();setTimeout(animateTyping,350);
-          }
-        });
-        watchBoot.observe(bootOverlay,{attributes:true,attributeFilter:['class']});
-        // Failsafe for browsers blocking CSS/boot transitions.
-        setTimeout(()=>{watchBoot.disconnect();if(charIndex===0)setTimeout(animateTyping,100)},5000);
-      } else setTimeout(animateTyping,380);
+      typeEl.textContent='';
+      setTimeout(tick,420);
     }
   }
-
-  const typeHeroCode=()=>{
-    const box=$('#hero-code'); if(!box) return;
-    const lines=[
-      {indent:'', key:'const', raw:' current = {'},
-      {indent:'  ', key:'research', raw: ': "AI/ML + HAR",'},
-      {indent:'  ', key:'internship', raw: ': "Byte Capsule",'},
-      {indent:'  ', key:'track', raw: ': "Mobile App Security",'},
-      {indent:'  ', key:'status', raw: ': "building + learning"'},
-      {indent:'', key:'', raw:'};'}
-    ];
-    const render=()=>{
-      box.innerHTML='';
-      lines.forEach((line,i)=>{
-        const row=document.createElement('div');
-        row.className='code-line';
-        row.style.setProperty('--delay',`${i*0.42}s`);
-        const visibleText=(line.indent + (line.key?line.key:'') + line.raw).replace(/\s/g,' ').trim();
-        row.style.setProperty('--chars', Math.max(10, visibleText.length));
-        if(line.key==='const') row.innerHTML=`<span class="k">const</span><span class="plain"> current = {</span>`;
-        else if(line.key){
-          const m=line.raw.match(/: (.+?)(,)?$/);
-          const val=m?m[1]:line.raw;
-          const comma=(m&&m[2])?m[2]:'';
-          row.innerHTML=`<span class="plain">${line.indent}</span><span class="key2">${line.key}</span><span class="plain">: </span><span class="v">${val}</span><span class="plain">${comma}</span>`;
-        } else row.innerHTML=`<span class="plain">};</span>`;
-        box.appendChild(row);
-      });
-    };
-    render();
-    if(!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(render, 7600);
-  };
-  typeHeroCode();
 
   const renderMetrics=()=>{const el=$('#hero-metrics');if(!el)return;el.innerHTML=D.hero.highlights.map(x=>`<div class="metric"><strong data-count="${esc(x.value)}">0</strong><span>${esc(x.label)}</span></div>`).join('');const counterIO=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const n=e.target, raw=n.dataset.count, target=parseFloat(raw); if(Number.isNaN(target)){n.textContent=raw;return} let start=0; const dur=900,t0=performance.now(); const f=t=>{const p=Math.min(1,(t-t0)/dur),v=target*p; n.textContent=raw.includes('.')?v.toFixed(2):Math.round(v); if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f);counterIO.unobserve(n)}),{threshold:.5});$$('[data-count]').forEach(x=>counterIO.observe(x))};
 
@@ -260,9 +151,9 @@
   const renderPubs=(target='#publication-list', filter='all')=>{const el=$(target);if(!el)return;const list=D.publications.filter(p=>filter==='all'||p.status.toLowerCase().includes(filter.toLowerCase()));el.innerHTML=list.map(p=>`<article class="publication"><div class="year">${esc(p.year)}<br><small>${esc(p.status)}</small></div><div><h3>${esc(p.title)}</h3><p>${esc(p.venue)}</p><p>${esc(p.role||'')}</p><div class="stack">${(p.tags||[]).slice(0,5).map(t=>`<span>${esc(t)}</span>`).join('')}</div></div><div class="pub-actions"><a class="mini-btn" href="publication.html?id=${encodeURIComponent(slug(p.title))}">Details</a>${p.doi?`<a class="mini-btn" href="${esc(p.doi)}" target="_blank" rel="noopener">DOI ↗</a>`:''}</div></article>`).join('')||'<div class="empty">No publications in this filter.</div>'};
   const renderEducation=()=>{const el=$('#education-grid');if(!el)return;el.innerHTML=D.education.map(x=>`<article class="media-card text-only"><div class="body"><div class="role">${esc(x.period)}</div><h3>${esc(x.degree)}</h3><p><b>${esc(x.institution)}</b></p><p>${esc(x.result)}</p><p>${esc(x.details)}</p></div></article>`).join('')};
   const renderSkills=()=>{const j=$('#skills-json'),g=$('#skill-cloud'); if(j){const entries=Object.entries(D.skills).slice(0,5);j.innerHTML=`<span class="brace">{</span>\n${entries.map(([k,v])=>`  <span class="key">"${esc(k)}"</span>: [\n${v.slice(0,6).map((x,i)=>`    <span class="str">"${esc(x)}"</span>${i<v.slice(0,6).length-1?',':''}`).join('\n')}\n  ]`).join(',\n')}\n<span class="brace">}</span>`} if(g){g.innerHTML=Object.entries(D.skills).map(([k,v])=>`<div class="skill-box"><h4>${esc(k)}</h4><p>${v.join(' · ')}</p></div>`).join('')}};
-  const renderLeadership=()=>{const el=$('#leadership-grid');if(!el)return;el.innerHTML=D.leadership.map(x=>`<article class="media-card ${x.image?'':'text-only'}">${x.image?`<img src="${esc(x.image)}" alt="${esc(x.organization)}" loading="lazy">`:''}<div class="body"><div class="role">${esc(x.currentRole)} · ${esc(x.period)}</div><h3>${esc(x.organization)}</h3><p>${esc(x.description)}</p>${x.roles?.length?`<p>${x.roles.map(r=>'• '+esc(r)).join('<br>')}</p>`:''}</div></article>`).join('')};
-  const renderAchievements=()=>{const el=$('#achievement-grid');if(!el)return;el.innerHTML=D.achievements.map(x=>`<article class="media-card"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy"><div class="body"><div class="role">${esc(x.subtitle)}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`).join('')};
-  const renderGallery=()=>{const el=$('#gallery-grid');if(!el)return;el.innerHTML=D.gallery.map(x=>`<figure class="gallery-item" data-img="${esc(x.image)}" data-title="${esc(x.title)}"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy"><figcaption class="gallery-caption"><span>${esc(x.category)}</span><h4>${esc(x.title)}</h4></figcaption></figure>`).join('');$$('.gallery-item').forEach(it=>it.addEventListener('click',()=>{const m=$('#image-modal');$('#modal-image').src=it.dataset.img;$('#modal-image').alt=it.dataset.title;m?.classList.add('open')}))};
+  const renderLeadership=()=>{const el=$('#leadership-grid');if(!el)return;el.innerHTML=D.leadership.map(x=>`<article class="media-card ${x.image?'':'text-only'}">${x.image?`<img src="${esc(x.image)}" alt="${esc(x.organization)}" loading="lazy" decoding="async">`:''}<div class="body"><div class="role">${esc(x.currentRole)} · ${esc(x.period)}</div><h3>${esc(x.organization)}</h3><p>${esc(x.description)}</p>${x.roles?.length?`<p>${x.roles.map(r=>'• '+esc(r)).join('<br>')}</p>`:''}</div></article>`).join('')};
+  const renderAchievements=()=>{const el=$('#achievement-grid');if(!el)return;el.innerHTML=D.achievements.map(x=>`<article class="media-card"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async"><div class="body"><div class="role">${esc(x.subtitle)}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`).join('')};
+  const renderGallery=()=>{const el=$('#gallery-grid');if(!el)return;el.innerHTML=D.gallery.map(x=>`<figure class="gallery-item" data-img="${esc(x.image)}" data-title="${esc(x.title)}"><img src="${esc(x.image)}" alt="${esc(x.title)}" loading="lazy" decoding="async"><figcaption class="gallery-caption"><span>${esc(x.category)}</span><h4>${esc(x.title)}</h4></figcaption></figure>`).join('');$$('.gallery-item').forEach(it=>it.addEventListener('click',()=>{const m=$('#image-modal');$('#modal-image').src=it.dataset.img;$('#modal-image').alt=it.dataset.title;m?.classList.add('open')}))};
   $('#modal-close')?.addEventListener('click',()=>$('#image-modal')?.classList.remove('open'));$('#image-modal')?.addEventListener('click',e=>{if(e.target.id==='image-modal')e.currentTarget.classList.remove('open')});
 
   const renderExperience=(target='#experience-timeline')=>{const el=$(target);if(!el)return;const items=D.experience.map(x=>({period:x.period,title:x.title,sub:x.organization,text:x.bullets.join(' '),skills:x.skills||[]}));el.innerHTML=items.map((x,i)=>`<article class="git-item"><div class="hash">commit ${('exp'+(i+1)+'2026').padEnd(10,'0')} · ${esc(x.period)}</div><h3>${esc(x.title)}</h3><p><b>${esc(x.sub)}</b></p><p>${esc(x.text)}</p>${x.skills.length?`<div class="stack">${x.skills.map(s=>`<span>${esc(s)}</span>`).join('')}</div>`:''}</article>`).join('')};

@@ -7,7 +7,7 @@ const PORTFOLIO_DATA = {
     location: "Bangladesh",
     email: "dewannoorcse13@gmail.com",
     phone: "+8801713593909",
-    profileImage: "assets/images/profile-main.jpg",
+    profileImage: "assets/images/profile-main.webp",
     cvFile: "assets/cv/Dewan_Nafiul_Islam_Noor_CV.pdf",
     availability: "Currently doing AI/ML research and a mobile application security internship",
     copyrightStartYear: 2026
@@ -16,7 +16,7 @@ const PORTFOLIO_DATA = {
   hero: {
     eyebrow: "M.Sc. Student in CSE at RUET",
     headline: "Building intelligent systems for healthcare, vision and human-centered activity understanding.",
-    intro: "I am currently balancing two active tracks: AI/ML research in Human Activity Recognition, Computer Vision and Healthcare AI, and a Mobile Application Security internship at Byte Capsule. As an M.Sc. student in CSE at RUET, I am building research depth while gaining hands-on security experience.",
+    intro: "M.Sc. student in CSE at RUET, currently working across AI/ML research and mobile application security. My research focuses on Human Activity Recognition, Computer Vision and Healthcare AI, while my internship at Byte Capsule adds hands-on security experience.",
     highlights: [
       { value: "3", label: "Published papers" },
       { value: "6", label: "Research outputs across published, presented and accepted stages" },
@@ -28,22 +28,22 @@ const PORTFOLIO_DATA = {
   heroSlides: [
     {
       title: "Research in Action",
-      image: "assets/images/slide-research.jpg",
+      image: "assets/images/slide-research.webp",
       caption: "Presenting research ideas with confidence, clarity and a growing focus on AI-driven solutions."
     },
     {
       title: "Leadership & Teamwork",
-      image: "assets/images/slide-leadership.jpg",
+      image: "assets/images/slide-leadership.webp",
       caption: "Leading student initiatives and collaborative events through planning, coordination and service."
     },
     {
       title: "Recognition & Milestones",
-      image: "assets/images/slide-award.jpg",
+      image: "assets/images/slide-award.webp",
       caption: "Celebrating academic achievement and meaningful progress across research and campus life."
     },
     {
       title: "Campus Presence",
-      image: "assets/images/slide-community.jpg",
+      image: "assets/images/slide-community.webp",
       caption: "A personal portfolio should feel real, grounded and connected to the journey behind the work."
     }
   ],
@@ -421,7 +421,7 @@ const PORTFOLIO_DATA = {
       organization: "BAUET Computer Society",
       currentRole: "President",
       period: "2022 – Present",
-      image: "assets/images/lead-computer-society.jpg",
+      image: "assets/images/lead-computer-society.webp",
       roles: [
         "Deputy IT & Skill Development Secretary — Oct 2022 to Jun 2023",
         "IT & Skill Development Secretary — Jun 2023 to Oct 2024",
@@ -434,7 +434,7 @@ const PORTFOLIO_DATA = {
       organization: "BAUET Welfare Club",
       currentRole: "President",
       period: "2022 – Present",
-      image: "assets/images/lead-welfare.jpg",
+      image: "assets/images/lead-welfare.webp",
       roles: [
         "General Member — Dec 2022 to Mar 2024",
         "Publication Secretary — Mar 2024 to Sep 2024",
@@ -447,7 +447,7 @@ const PORTFOLIO_DATA = {
       organization: "Hult Prize at BAUET",
       currentRole: "Campus Director",
       period: "2023 – Present",
-      image: "assets/images/lead-hult.jpg",
+      image: "assets/images/lead-hult.webp",
       roles: [
         "Officer of Event & Hospitality Management — Jan 2023 to Dec 2023",
         "Head of Logistics Management — Dec 2023 to Sep 2024",
@@ -459,7 +459,7 @@ const PORTFOLIO_DATA = {
       organization: "Mind Storm",
       currentRole: "Core Organizer",
       period: "Mind Storm 4.0 & 5.0",
-      image: "assets/images/lead-mindstorm.jpg",
+      image: "assets/images/lead-mindstorm.webp",
       roles: [],
       description: "Supported event organization and student engagement for Mind Storm 4.0 and 5.0."
     },
@@ -467,7 +467,7 @@ const PORTFOLIO_DATA = {
       organization: "BAUET Photography and Media Club",
       currentRole: "General Member",
       period: "2023 – Present",
-      image: "assets/images/lead-photo-media.jpg",
+      image: "assets/images/lead-photo-media.webp",
       roles: [],
       description: "Participated in photography and media-related student activities and visual documentation."
     }
@@ -478,25 +478,25 @@ const PORTFOLIO_DATA = {
       title: "Dean's Award — BAUET",
       subtitle: "Academic Excellence",
       description: "Recognition for strong undergraduate academic performance and consistent academic commitment.",
-      image: "assets/images/achievement-deans.jpg"
+      image: "assets/images/achievement-deans.webp"
     },
     {
       title: "Leadership Recognition — BAUET Computer Society",
       subtitle: "Crest & Certificate",
       description: "Recognition associated with leadership and contribution as President of BAUET Computer Society.",
-      image: "assets/images/achievement-computer-society.jpg"
+      image: "assets/images/achievement-computer-society.webp"
     },
     {
       title: "Leadership Recognition — BAUET Welfare Club",
       subtitle: "Crest & Certificate",
       description: "Recognition associated with leadership and contribution as President of BAUET Welfare Club.",
-      image: "assets/images/achievement-welfare.jpg"
+      image: "assets/images/achievement-welfare.webp"
     },
     {
       title: "IEEE SPICSCON 2026 Presentation",
       subtitle: "Research Presentation",
       description: "Successfully presented research work at the 5th IEEE International Conference on Signal Processing, Information, Communication and Systems 2026.",
-      image: "assets/images/achievement-spicscon.jpg"
+      image: "assets/images/achievement-spicscon.webp"
     }
   ],
 
@@ -504,37 +504,37 @@ const PORTFOLIO_DATA = {
     {
       title: "Computer Society Leadership",
       category: "Club",
-      image: "assets/images/gallery-computer-society.jpg",
+      image: "assets/images/gallery-computer-society.webp",
       caption: "Leading student-centered initiatives and representing the spirit of technical collaboration on campus."
     },
     {
       title: "Welfare Outreach",
       category: "Community",
-      image: "assets/images/gallery-welfare.jpg",
+      image: "assets/images/gallery-welfare.webp",
       caption: "Meaningful service becomes more powerful when it reaches people directly and with empathy."
     },
     {
       title: "Hult Prize Journey",
       category: "Leadership",
-      image: "assets/images/gallery-hult.jpg",
+      image: "assets/images/gallery-hult.webp",
       caption: "Entrepreneurship, logistics and team coordination came together through the Hult Prize experience."
     },
     {
       title: "Research Presentation",
       category: "Research",
-      image: "assets/images/gallery-research.jpg",
+      image: "assets/images/gallery-research.webp",
       caption: "Sharing research ideas publicly is where preparation, confidence and technical clarity meet."
     },
     {
       title: "Award Ceremony",
       category: "Achievement",
-      image: "assets/images/gallery-award.jpg",
+      image: "assets/images/gallery-award.webp",
       caption: "Academic milestones become memorable when they reflect consistency, focus and hard work."
     },
     {
       title: "University Life",
       category: "Community",
-      image: "assets/images/gallery-university.jpg",
+      image: "assets/images/gallery-university.webp",
       caption: "Alongside research and leadership, university life is also about friendships, events and collective memories."
     }
   ],
