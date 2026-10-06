@@ -542,7 +542,51 @@ const PORTFOLIO_DATA = {
       category: "Community",
       image: "assets/images/gallery-university.webp",
       caption: "Alongside research and leadership, university life is also about friendships, events and collective memories."
+    },
+    {
+      title: "IEEE SPICSCON 2026 Session",
+      category: "Research",
+      image: "assets/images/spicscon-session-2026.webp",
+      caption: "A conference-session moment reflecting active participation in IEEE SPICSCON 2026."
+    },
+    {
+      title: "Thesis Milestone with Supervisor",
+      category: "Academic",
+      image: "assets/images/thesis-supervisor.webp",
+      caption: "A meaningful academic milestone marking thesis submission, supervision and research progress."
+    },
+    {
+      title: "IEEE SPICSCON 2026 with Researchers",
+      category: "Research",
+      image: "assets/images/spicscon-conference-group-2026.webp",
+      caption: "Conference participation with researchers and faculty during IEEE SPICSCON 2026."
     }
+  ],
+
+  photoReel: [
+    { title: "Research in Action", image: "assets/images/slide-research.webp" },
+    { title: "IEEE SPICSCON 2026", image: "assets/images/research-spicscon-2026.webp" },
+    { title: "SPICSCON Session", image: "assets/images/spicscon-session-2026.webp" },
+    { title: "Conference with Researchers", image: "assets/images/spicscon-conference-group-2026.webp" },
+    { title: "Thesis Milestone", image: "assets/images/thesis-supervisor.webp" },
+    { title: "Leadership", image: "assets/images/slide-leadership.webp" },
+    { title: "Award & Milestone", image: "assets/images/slide-award.webp" },
+    { title: "Campus Presence", image: "assets/images/slide-community.webp" },
+    { title: "Computer Society", image: "assets/images/lead-computer-society.webp" },
+    { title: "Welfare Club", image: "assets/images/lead-welfare.webp" },
+    { title: "Hult Prize", image: "assets/images/lead-hult.webp" },
+    { title: "Mind Storm", image: "assets/images/lead-mindstorm.webp" },
+    { title: "Photography & Media", image: "assets/images/lead-photo-media.webp" },
+    { title: "Dean's Award", image: "assets/images/achievement-deans.webp" },
+    { title: "Computer Society Recognition", image: "assets/images/achievement-computer-society.webp" },
+    { title: "Welfare Recognition", image: "assets/images/achievement-welfare.webp" },
+    { title: "SPICSCON Presentation", image: "assets/images/achievement-spicscon.webp" },
+    { title: "Research Presentation", image: "assets/images/gallery-research.webp" },
+    { title: "University Life", image: "assets/images/gallery-university.webp" },
+    { title: "Award Ceremony", image: "assets/images/gallery-award.webp" },
+    { title: "Hult Journey", image: "assets/images/gallery-hult.webp" },
+    { title: "Welfare Outreach", image: "assets/images/gallery-welfare.webp" },
+    { title: "Computer Society Leadership", image: "assets/images/gallery-computer-society.webp" }
   ],
 
   teaching: {
