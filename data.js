@@ -29,22 +29,30 @@ const PORTFOLIO_DATA = {
     {
       title: "Research in Action",
       image: "assets/images/slide-research.webp",
-      caption: "Presenting research ideas with confidence, clarity and a growing focus on AI-driven solutions."
+      category: "Research",
+      caption: "My research journey began with Human Activity Recognition and expanded into healthcare AI, computer vision and intelligent video understanding.",
+      story: "Presenting research at conferences turned experiments, model results and technical writing into real conversations with researchers and faculty. Each presentation is another step toward building AI systems that are useful beyond the lab."
     },
     {
       title: "Leadership & Teamwork",
       image: "assets/images/slide-leadership.webp",
-      caption: "Leading student initiatives and collaborative events through planning, coordination and service."
+      category: "Leadership",
+      caption: "Leadership became the space where technical interests met teamwork, communication and responsibility.",
+      story: "Through student organizations and campus initiatives, I learned how to coordinate people, plan events and keep a team moving toward a shared goal. Those experiences shaped how I collaborate in research and software projects today."
     },
     {
       title: "Recognition & Milestones",
       image: "assets/images/slide-award.webp",
-      caption: "Celebrating academic achievement and meaningful progress across research and campus life."
+      category: "Milestone",
+      caption: "Awards and conference milestones reflect consistency across academics, research and campus contribution.",
+      story: "Recognition matters most when it represents the work behind it: long study sessions, research revisions, presentations and team effort. These milestones remind me to keep improving rather than treating any achievement as the finish line."
     },
     {
       title: "Campus Presence",
       image: "assets/images/slide-community.webp",
-      caption: "A personal portfolio should feel real, grounded and connected to the journey behind the work."
+      category: "Journey",
+      caption: "University life connected research, friendships, leadership and personal growth into one larger journey.",
+      story: "Beyond papers and projects, campus experiences built confidence, communication and perspective. The people, events and responsibilities around university life continue to influence how I approach new opportunities and challenges."
     }
   ],
 
