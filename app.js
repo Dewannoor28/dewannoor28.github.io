@@ -123,7 +123,7 @@
 
     const paint=()=>{
       if(code)code.textContent=languageNames[activeLanguage]||'EN';
-      $('[data-lang]',menu).forEach(btn=>btn.classList.toggle('active',btn.dataset.lang===activeLanguage));
+      $$('[data-lang]',menu).forEach(btn=>btn.classList.toggle('active',btn.dataset.lang===activeLanguage));
     };
     paint();
 
@@ -138,7 +138,7 @@
     document.addEventListener('click',e=>{if(!wrap.contains(e.target))close()});
     document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 
-    $('[data-lang]',menu).forEach(btn=>btn.addEventListener('click',()=>{
+    $$('[data-lang]',menu).forEach(btn=>btn.addEventListener('click',()=>{
       const lang=btn.dataset.lang;
       if(!languageNames[lang] || lang===activeLanguage){close();return;}
       activeLanguage=lang;
@@ -505,7 +505,7 @@
   // v28: scroll-triggered sequence. Content remains visible unless this JS successfully activates it.
   const setupScrollSequence=()=>{
     if(page!=='home') return;
-    const sections=$('main > section:not(.hero)');
+    const sections=$$('main > section:not(.hero)');
     const selector='.section-head,.research-row,.project-card,.publication,.skill-box,.education-card,.leadership-grid>.media-card,.achievement-grid>.media-card,.photo-reel,.journey-slider,.gallery-item,.contact-shell,.metric';
     const targets=[];
     sections.forEach(section=>{
