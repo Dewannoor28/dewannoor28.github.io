@@ -509,7 +509,7 @@
 
   // Stronger scroll motion for dynamically-rendered portfolio items
   const registerDynamicMotion=()=>{
-    if(mq('(prefers-reduced-motion: reduce)').matches) return;
+    if(mq('(prefers-reduced-motion: reduce)').matches || mq('(max-width: 1024px)').matches || mq('(pointer: coarse)').matches) return;
     const items=$$('.card,.publication,.research-row,.git-item,.skill-box,.media-card').filter(el=>!el.closest('.stagger'));
     if(!('IntersectionObserver' in window)){items.forEach(el=>el.classList.add('motion-in'));return;}
     const itemIO=new IntersectionObserver(entries=>entries.forEach(e=>{
@@ -560,9 +560,84 @@
   protectOwnName();
   setupLanguageSwitcher();
 
+  // v34: one clean, blur-free reveal system for phones and tablets.
+  const setupCleanTouchReveal=()=>{
+    const isTouchLayout = mq('(max-width: 1024px)').matches || mq('(pointer: coarse)').matches;
+    if(!isTouchLayout || mq('(prefers-reduced-motion: reduce)').matches) return;
+
+    const selector=[
+      '.section-head',
+      '.about-code',
+      '.about-prose',
+      '.research-row',
+      '.project-card',
+      '.publication',
+      '.skill-box',
+      '.education-card',
+      '.git-item',
+      '.leadership-grid>.media-card',
+      '.achievement-grid>.media-card',
+      '.photo-reel',
+      '.journey-slider',
+      '.gallery-item',
+      '.terminal',
+      '.contact-shell',
+      '.metric'
+    ].join(',');
+
+    const targets=[];
+    $('main > section').forEach(section=>{
+      const items=$(selector,section);
+      items.forEach((el,i)=>{
+        if(el.closest('.hero') && !el.classList.contains('metric')) return;
+        el.style.setProperty('--clean-reveal-delay', Math.min(i,6)*70+'ms');
+        el.classList.add('clean-reveal-ready');
+        targets.push(el);
+      });
+    });
+
+    if(!targets.length) return;
+
+    const revealNow=el=>{
+      if(el.classList.contains('clean-reveal-in')) return;
+      el.classList.add('clean-reveal-in');
+    };
+
+    if(!('IntersectionObserver' in window)){
+      targets.forEach(revealNow);
+      return;
+    }
+
+    const cleanIO=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting) return;
+        revealNow(entry.target);
+        cleanIO.unobserve(entry.target);
+      });
+    },{threshold:.08,rootMargin:'0px 0px -6% 0px'});
+
+    targets.forEach(el=>{
+      const r=el.getBoundingClientRect();
+      if(r.top < innerHeight*.92 && r.bottom > 0) revealNow(el);
+      else cleanIO.observe(el);
+    });
+
+    // Safari/slow-device failsafe: never leave a block faded after scrolling past it.
+    const rescue=()=>{
+      targets.forEach(el=>{
+        if(el.classList.contains('clean-reveal-in')) return;
+        const r=el.getBoundingClientRect();
+        if(r.top < innerHeight*1.05 && r.bottom > -80) revealNow(el);
+      });
+    };
+    addEventListener('scroll',rescue,{passive:true});
+    addEventListener('orientationchange',()=>setTimeout(rescue,180),{passive:true});
+    setTimeout(rescue,900);
+  };
+
   // v28: scroll-triggered sequence. Content remains visible unless this JS successfully activates it.
   const setupScrollSequence=()=>{
-    if(page!=='home') return;
+    if(page!=='home' || mq('(max-width: 1024px)').matches || mq('(pointer: coarse)').matches) return;
     const sections=$$('main > section:not(.hero)');
     const selector='.section-head,.research-row,.project-card,.publication,.skill-box,.education-card,.leadership-grid>.media-card,.achievement-grid>.media-card,.photo-reel,.journey-slider,.gallery-item,.contact-shell,.metric';
     const targets=[];
@@ -606,7 +681,7 @@
       $$('.motion-ready:not(.motion-in)').forEach(el=>el.classList.add('motion-in'));
     },1800);
   };
-  requestAnimationFrame(()=>{registerDynamicMotion();activateRevealFailSafe();setupScrollSequence();});
+  requestAnimationFrame(()=>{setupCleanTouchReveal();registerDynamicMotion();activateRevealFailSafe();setupScrollSequence();});
 
   if(page==='project-detail'){
     const id=new URLSearchParams(location.search).get('id');const p=D.projects.find(x=>slug(x.title)===id)||D.projects[0];
