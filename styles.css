@@ -2018,3 +2018,37 @@ body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-done{
     animation-duration:.42s!important;
   }
 }
+
+
+/* ==============================================================
+   v40 — LARGE DESKTOP / ULTRAWIDE RESPONSIVENESS
+   Wider canvas + complete gallery grid for items 7–10.
+   ============================================================== */
+
+/* Complete the desktop 12-column gallery pattern. */
+@media(min-width:981px){
+  .gallery-item:nth-child(7),
+  .gallery-item:nth-child(10){
+    grid-column:span 7!important;
+  }
+  .gallery-item:nth-child(8),
+  .gallery-item:nth-child(9){
+    grid-column:span 5!important;
+  }
+}
+
+/* Use more of large/fullscreen displays without making text edge-to-edge. */
+@media(min-width:1400px){
+  :root{--max:1440px}
+  .container{
+    width:min(var(--max),calc(100% - 64px));
+  }
+}
+
+/* Extra-wide monitors retain comfortable outer breathing room. */
+@media(min-width:1800px){
+  :root{--max:1560px}
+  .container{
+    width:min(var(--max),calc(100% - 96px));
+  }
+}
