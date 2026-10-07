@@ -1992,3 +1992,29 @@ body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-done{
     will-change:auto!important;
   }
 }
+
+
+/* ==============================================================
+   v39 — FAST-SCROLL PERFORMANCE TUNING
+   Same visual reveal, less GPU/layout pressure.
+   ============================================================== */
+body[data-page] main > section:not(.hero) .clean-reveal-ready{
+  will-change:auto!important;
+}
+body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-in{
+  will-change:opacity,transform!important;
+  animation-duration:.5s!important;
+}
+body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-done{
+  will-change:auto!important;
+}
+@media(max-width:1024px){
+  body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-in{
+    animation-duration:.46s!important;
+  }
+}
+@media(max-width:650px){
+  body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-in{
+    animation-duration:.42s!important;
+  }
+}
