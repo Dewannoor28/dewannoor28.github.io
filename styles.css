@@ -1901,3 +1901,94 @@ html[dir="rtl"] .footer-brand.notranslate{
     animation:none!important;
   }
 }
+
+
+/* ==============================================================
+   v38 — UNIFIED CRISP SCROLL ANIMATION
+   Desktop + tablet + mobile. No blur, no scale.
+   ============================================================== */
+
+/* Stop legacy non-hero scroll animations from competing with v38. */
+body[data-page] main > section:not(.hero) .reveal.visible,
+body[data-page] main > section:not(.hero) .stagger.visible>*,
+body[data-page] main > section:not(.hero) .motion-ready,
+body[data-page] main > section:not(.hero) .motion-ready.motion-in,
+body[data-page] main > section:not(.hero) .scroll-seq-ready,
+body[data-page] main > section:not(.hero) .scroll-seq-ready.scroll-seq-in{
+  animation:none!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  transform:none!important;
+}
+
+/* Every tracked block starts crisp, slightly lower, and faded. */
+body[data-page] main > section:not(.hero) .clean-reveal-ready{
+  opacity:0!important;
+  transform:translate3d(0,22px,0)!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  animation:none!important;
+  will-change:opacity,transform;
+}
+
+/* It animates once when it enters the viewport. */
+body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-in{
+  animation:v38ScrollReveal .62s cubic-bezier(.2,.72,.2,1) var(--clean-reveal-delay,0ms) forwards!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+}
+
+body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-done{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  will-change:auto;
+}
+
+@keyframes v38ScrollReveal{
+  0%{
+    opacity:0;
+    transform:translate3d(0,22px,0);
+  }
+  100%{
+    opacity:1;
+    transform:translate3d(0,0,0);
+  }
+}
+
+/* Slightly shorter movement on tablets and phones. */
+@media(max-width:1024px){
+  body[data-page] main > section:not(.hero) .clean-reveal-ready{
+    transform:translate3d(0,17px,0)!important;
+  }
+  @keyframes v38ScrollReveal{
+    0%{opacity:0;transform:translate3d(0,17px,0)}
+    100%{opacity:1;transform:translate3d(0,0,0)}
+  }
+}
+
+@media(max-width:650px){
+  body[data-page] main > section:not(.hero) .clean-reveal-ready{
+    transform:translate3d(0,14px,0)!important;
+  }
+  body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-in{
+    animation-duration:.52s!important;
+  }
+  @keyframes v38ScrollReveal{
+    0%{opacity:0;transform:translate3d(0,14px,0)}
+    100%{opacity:1;transform:translate3d(0,0,0)}
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  body[data-page] main > section:not(.hero) .clean-reveal-ready,
+  body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-in,
+  body[data-page] main > section:not(.hero) .clean-reveal-ready.clean-reveal-done{
+    opacity:1!important;
+    transform:none!important;
+    animation:none!important;
+    filter:none!important;
+    will-change:auto!important;
+  }
+}
