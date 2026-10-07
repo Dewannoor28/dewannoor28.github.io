@@ -1818,3 +1818,86 @@ html[dir="rtl"] .footer-brand.notranslate{
     overflow-y:auto;
   }
 }
+
+
+/* ==============================================================
+   v34 — MOBILE/TABLET CRISP SCROLL REVEAL
+   No blur, no scale, no persistent soft rendering.
+   ============================================================== */
+@media(max-width:1024px), (pointer:coarse){
+  /* Neutralize all legacy blur/scale animation systems on touch layouts. */
+  body[data-page] main .reveal.visible,
+  body[data-page] main .stagger.visible>*,
+  body[data-page] main .motion-ready,
+  body[data-page] main .motion-ready.motion-in,
+  body[data-page] main .scroll-seq-ready,
+  body[data-page] main .scroll-seq-ready.scroll-seq-in{
+    animation:none!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+    transform:none!important;
+  }
+
+  /* Clean sequential blocks: crisp at every stage, only opacity + Y movement. */
+  html body[data-page] main .clean-reveal-ready.clean-reveal-ready{
+    opacity:.12!important;
+    transform:translateY(16px)!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+    animation:none!important;
+  }
+
+  html body[data-page] main .clean-reveal-ready.clean-reveal-ready.clean-reveal-in{
+    animation:v34CleanReveal .52s cubic-bezier(.22,.72,.22,1) var(--clean-reveal-delay,0ms) forwards!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+  }
+
+  @keyframes v34CleanReveal{
+    from{
+      opacity:.12;
+      transform:translateY(16px);
+      filter:none;
+    }
+    to{
+      opacity:1;
+      transform:none;
+      filter:none;
+    }
+  }
+
+  /* Keep all images/text visually crisp while blocks enter. */
+  body[data-page] main img,
+  body[data-page] main h1,
+  body[data-page] main h2,
+  body[data-page] main h3,
+  body[data-page] main h4,
+  body[data-page] main p,
+  body[data-page] main span,
+  body[data-page] main a,
+  body[data-page] main strong{
+    filter:none!important;
+    -webkit-filter:none!important;
+  }
+}
+
+@media(max-width:650px){
+  html body[data-page] main .clean-reveal-ready.clean-reveal-ready{
+    opacity:.16!important;
+    transform:translateY(13px)!important;
+  }
+  @keyframes v34CleanReveal{
+    from{opacity:.16;transform:translateY(13px);filter:none}
+    to{opacity:1;transform:none;filter:none}
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .clean-reveal-ready,
+  .clean-reveal-ready.clean-reveal-in{
+    opacity:1!important;
+    transform:none!important;
+    filter:none!important;
+    animation:none!important;
+  }
+}
