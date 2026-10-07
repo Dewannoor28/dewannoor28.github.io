@@ -560,7 +560,7 @@
   protectOwnName();
   setupLanguageSwitcher();
 
-  // v38: unified blur-free scroll reveal for desktop, tablet and mobile.
+  // v39: optimized blur-free scroll reveal for desktop, tablet and mobile.
   const setupCleanScrollReveal=()=>{
     if(mq('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -590,7 +590,7 @@
       items.forEach((el,i)=>{
         if(el.dataset.cleanRevealBound==='1') return;
         el.dataset.cleanRevealBound='1';
-        el.style.setProperty('--clean-reveal-delay', Math.min(i,6)*65+'ms');
+        el.style.setProperty('--clean-reveal-delay', Math.min(i,4)*45+'ms');
         el.classList.add('clean-reveal-ready');
         targets.push(el);
       });
@@ -601,7 +601,7 @@
     const revealNow=el=>{
       if(el.classList.contains('clean-reveal-in')) return;
       el.classList.add('clean-reveal-in');
-      setTimeout(()=>el.classList.add('clean-reveal-done'),760);
+      setTimeout(()=>el.classList.add('clean-reveal-done'),620);
     };
 
     if(!('IntersectionObserver' in window)){
@@ -616,29 +616,28 @@
         cleanIO.unobserve(entry.target);
       });
     },{
-      threshold:.08,
-      rootMargin:'0px 0px -8% 0px'
+      threshold:.03,
+      rootMargin:'0px 0px -3% 0px'
     });
 
     targets.forEach(el=>{
       const r=el.getBoundingClientRect();
-      // Only animate what is actually inside the initial viewport.
-      if(r.top < innerHeight*.88 && r.bottom > 0) revealNow(el);
+      if(r.top < innerHeight*.9 && r.bottom > 0) revealNow(el);
       else cleanIO.observe(el);
     });
 
-    // Safari / fast-scroll failsafe.
+    // One-shot lifecycle checks only; no continuous scroll scanning.
     const rescue=()=>{
       targets.forEach(el=>{
         if(el.classList.contains('clean-reveal-in')) return;
         const r=el.getBoundingClientRect();
-        if(r.top < innerHeight*.96 && r.bottom > -60) revealNow(el);
+        if(r.top < innerHeight*.98 && r.bottom > -80) revealNow(el);
       });
     };
-    addEventListener('scroll',rescue,{passive:true});
     addEventListener('resize',rescue,{passive:true});
     addEventListener('orientationchange',()=>setTimeout(rescue,160),{passive:true});
-    setTimeout(rescue,700);
+    addEventListener('pageshow',()=>setTimeout(rescue,120),{once:true});
+    setTimeout(rescue,900);
   };
 
   // v28: scroll-triggered sequence. Content remains visible unless this JS successfully activates it.
