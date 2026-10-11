@@ -267,7 +267,7 @@
   // Command palette
   const commands = [
     ['Home','index.html','⌂'],['Research','research.html','R'],['Publications','publications.html','P'],['Projects','projects.html','⌘'],['Experience','experience.html','E'],['Education','education.html','ED'],['Achievements','achievements.html','A'],
-    ['View CV', D.site.cvFile, '↗'],['GitHub', D.socialLinks.find(x=>x.label==='GitHub')?.url,'↗'],['Google Scholar',D.socialLinks.find(x=>x.label==='Google Scholar')?.url,'↗'],['Email','mailto:'+D.site.email,'@']
+    ['View CV', 'cv.html', '↗'],['GitHub', D.socialLinks.find(x=>x.label==='GitHub')?.url,'↗'],['Google Scholar',D.socialLinks.find(x=>x.label==='Google Scholar')?.url,'↗'],['Email','mailto:'+D.site.email,'@']
   ].filter(x=>x[1]);
   const cmd=$('#command'), input=$('#command-input'), results=$('#command-results');
   const renderCommands=(q='')=>{ if(!results)return; const f=commands.filter(c=>c[0].toLowerCase().includes(q.toLowerCase()));results.innerHTML=f.map((c,i)=>`<a class="command-item ${i===0?'active':''}" href="${esc(c[1])}" ${(/^https?:/.test(c[1]) || /\.pdf(?:$|[?#])/i.test(c[1]))?'target="_blank" rel="noopener"':''}><span>${esc(c[0])}</span><span>${esc(c[2])}</span></a>`).join(''); };
@@ -544,7 +544,7 @@
       fullPhoto.src=D.site.profileImage;
     }
     if($('#cv-button')){
-      $('#cv-button').href=D.site.cvFile;
+      $('#cv-button').href='cv.html';
       $('#cv-button').target='_blank';
       $('#cv-button').rel='noopener';
       $('#cv-button').removeAttribute('download');
