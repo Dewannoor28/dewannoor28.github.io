@@ -267,10 +267,10 @@
   // Command palette
   const commands = [
     ['Home','index.html','⌂'],['Research','research.html','R'],['Publications','publications.html','P'],['Projects','projects.html','⌘'],['Experience','experience.html','E'],['Education','education.html','ED'],['Achievements','achievements.html','A'],
-    ['Download CV', D.site.cvFile, '↓'],['GitHub', D.socialLinks.find(x=>x.label==='GitHub')?.url,'↗'],['Google Scholar',D.socialLinks.find(x=>x.label==='Google Scholar')?.url,'↗'],['Email','mailto:'+D.site.email,'@']
+    ['View CV', D.site.cvFile, '↗'],['GitHub', D.socialLinks.find(x=>x.label==='GitHub')?.url,'↗'],['Google Scholar',D.socialLinks.find(x=>x.label==='Google Scholar')?.url,'↗'],['Email','mailto:'+D.site.email,'@']
   ].filter(x=>x[1]);
   const cmd=$('#command'), input=$('#command-input'), results=$('#command-results');
-  const renderCommands=(q='')=>{ if(!results)return; const f=commands.filter(c=>c[0].toLowerCase().includes(q.toLowerCase()));results.innerHTML=f.map((c,i)=>`<a class="command-item ${i===0?'active':''}" href="${esc(c[1])}" ${/^https?:/.test(c[1])?'target="_blank" rel="noopener"':''}><span>${esc(c[0])}</span><span>${esc(c[2])}</span></a>`).join(''); };
+  const renderCommands=(q='')=>{ if(!results)return; const f=commands.filter(c=>c[0].toLowerCase().includes(q.toLowerCase()));results.innerHTML=f.map((c,i)=>`<a class="command-item ${i===0?'active':''}" href="${esc(c[1])}" ${(/^https?:/.test(c[1]) || /\.pdf(?:$|[?#])/i.test(c[1]))?'target="_blank" rel="noopener"':''}><span>${esc(c[0])}</span><span>${esc(c[2])}</span></a>`).join(''); };
   renderCommands();
   const openCmd=()=>{cmd?.classList.add('open');input?.focus();renderCommands('')}; const closeCmd=()=>cmd?.classList.remove('open');
   $$('#command-open,[data-command-open]').forEach(x=>x.addEventListener('click',openCmd)); cmd?.addEventListener('click',e=>{if(e.target===cmd)closeCmd()}); input?.addEventListener('input',e=>renderCommands(e.target.value));
@@ -543,7 +543,12 @@
       fullPhoto.onload=()=>{heroPhoto.src=D.site.profileImage};
       fullPhoto.src=D.site.profileImage;
     }
-    $('#cv-button') && ($('#cv-button').href=D.site.cvFile);
+    if($('#cv-button')){
+      $('#cv-button').href=D.site.cvFile;
+      $('#cv-button').target='_blank';
+      $('#cv-button').rel='noopener';
+      $('#cv-button').removeAttribute('download');
+    }
     renderMetrics(); renderMarquee(); renderExperience('#home-experience-timeline',true); renderResearchRows('#research-rows',4); renderProjects('#project-grid','featured'); renderPubs('#publication-list','Published'); renderEducation(); renderSkills(); renderLeadership(); renderAchievements(); renderPhotoReel(); setupPhotoSlider(); renderJourney(); setupJourneySlider(); renderGallery(); renderExperience(); setupTerminal();
   }
 
