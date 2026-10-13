@@ -166,19 +166,6 @@ const PORTFOLIO_DATA = {
       doi: "",
       github: "",
       tags: ["Explainable AI", "Driver Drowsiness", "Computer Vision", "Safety AI"]
-    },
-    {
-      status: "Accepted for Oral Presentation",
-      year: "2026",
-      type: "IEEE Conference Research",
-      title: "NightCare-VideoMAE: A Framework for Low-Light Patient Activity Recognition with Real Medical-Room Validation",
-      venue: "8th IEEE IICAIET 2026 • Paper ID 1571316177",
-      authors: "Official author order to follow the final conference manuscript.",
-      role: "Accepted for oral presentation; camera-ready revision and final publication process pending.",
-      summary: "VideoMAE-based patient activity recognition for realistic medical-room and low-light conditions, closely aligned with Healthcare AI and Human Activity Recognition.",
-      doi: "",
-      github: "",
-      tags: ["VideoMAE", "Low-Light Vision", "Healthcare AI", "Patient Activity Recognition"]
     }
   ],
 
