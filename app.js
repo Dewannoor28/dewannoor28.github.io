@@ -266,7 +266,7 @@
 
   // Command palette
   const commands = [
-    ['Home','index.html','⌂'],['Research','research.html','R'],['Publications','publications.html','P'],['Projects','projects.html','⌘'],['Experience','experience.html','E'],['Education','education.html','ED'],['Achievements','achievements.html','A'],
+    ['Home','index.html','⌂'],['Research','research.html','R'],['Publications','publications.html','P'],['Projects','projects.html','⌘'],['Experience','experience.html','E'],['Education','education.html','ED'],['Leadership & Learning','leadership-learning.html','L'],['Gallery','gallery.html','G'],
     ['View CV', 'cv.html', '↗'],['GitHub', D.socialLinks.find(x=>x.label==='GitHub')?.url,'↗'],['Google Scholar',D.socialLinks.find(x=>x.label==='Google Scholar')?.url,'↗'],['Email','mailto:'+D.site.email,'@']
   ].filter(x=>x[1]);
   const cmd=$('#command'), input=$('#command-input'), results=$('#command-results');
