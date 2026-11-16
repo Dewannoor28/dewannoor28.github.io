@@ -79,7 +79,13 @@
       list.after(panel);
     }
     const leaders=$$('#leadership-grid > .media-card');
-    leaders.forEach((card,i)=>{if(i>=3)card.remove()});
+    leaders.forEach((card,i)=>{
+      if(i>=3){card.remove();return;}
+      // Only show the highlighted position and short description on Home.
+      // Full role progression stays in the Leadership & Learning page.
+      const paragraphs=$('.body > p',card);
+      paragraphs.slice(1).forEach(p=>p.remove());
+    });
   }
   function gallCategory(x){
     const txt=((x.title||x.organization||'')+' '+(x.image||'')).toLowerCase();
@@ -105,20 +111,68 @@
   ];
   function gallery(){
     const grid=$('#gallery-v9-grid');if(!grid)return;
-    const seen=new Set(),photos=[];
-    for(const x of [...(D.gallery||[]),...(D.achievements||[]),...(D.heroSlides||[]),...morePhotos]){
-      if(!x?.image||seen.has(x.image)||/mind.?storm|photo.?media/i.test((x.title||'')+' '+x.image))continue;
-      seen.add(x.image);photos.push({title:x.title||x.organization||'Portfolio Moment',image:x.image,category:gallCategory(x)});
+    // Use the original site's captions, achievement notes and role records;
+    // a photo without verified details receives only a neutral caption.
+    const photos=[], seen=new Set();
+    const sources=[
+      ...(D.gallery||[]),
+      ...(D.achievements||[]),
+      ...(D.heroSlides||[]),
+      ...(D.leadership||[]),
+      ...(D.photoReel||[]),
+      ...morePhotos
+    ];
+    for(const x of sources){
+      if(!x?.image || seen.has(x.image) || /mind.?storm|photo.?media/i.test((x.title||x.organization||'')+' '+x.image))continue;
+      seen.add(x.image);
+      const category=gallCategory(x);
+      const title=x.title||x.organization||'Portfolio Moment';
+      const description=x.caption||x.description||(
+        x.category==='Research'?'A selected photograph from my academic research activities.':
+        'A photograph from my portfolio journey, included in this gallery of research, leadership and campus memories.'
+      );
+      const role=x.currentRole ? x.currentRole+(x.period?' · '+x.period:'') : (x.subtitle||'');
+      const year=String(x.year||((x.period||'').match(/\b20\d{2}\b/g)||[]).slice(-1)[0]||((title).match(/\b20\d{2}\b/)||[])[0]||'');
+      photos.push({image:x.image,title,category,description,year,role});
     }
-    const modal=$('#gallery-v9-modal'),preview=$('#gallery-v9-preview'),caption=$('#gallery-v9-caption');
-    const render=(category='All')=>{grid.innerHTML=photos.filter(x=>category==='All'||category===x.category).map(x=>
-      '<button class="gallery-v9-card" type="button" data-photo="'+esc(x.image)+'" data-title="'+esc(x.title)+'"><img src="'+esc(x.image)+'" loading="lazy" alt="'+esc(x.title)+'"><strong>'+esc(x.title)+'</strong><small>'+esc(x.category)+'</small></button>'
-    ).join('');};
+    const modal=$('#gallery-v9-modal'),preview=$('#gallery-v9-preview'),
+      caption=$('#gallery-v9-caption'),description=$('#gallery-v9-description'),
+      meta=$('#gallery-v9-meta'),roleText=$('#gallery-v9-role');
+    let activeTrigger=null;
+    const render=(category='All')=>{
+      const selected=photos.filter(x=>category==='All'||category===x.category);
+      grid.innerHTML=selected.map(x=>{
+        const i=photos.indexOf(x);
+        return '<button class="gallery-v9-card" type="button" data-gallery-index="'+i+'" aria-label="View photo details: '+esc(x.title)+'">'+
+        '<img src="'+esc(x.image)+'" alt="'+esc(x.title)+'" loading="lazy" decoding="async">'+
+        '<strong>'+esc(x.title)+'</strong><small>'+esc(x.category)+'</small></button>';
+      }).join('');
+    };
     render();
-    $$('.gallery-filter').forEach(btn=>btn.addEventListener('click',()=>{$$('.gallery-filter').forEach(x=>x.classList.remove('active'));btn.classList.add('active');render(btn.dataset.filter||'All');}));
-    grid.addEventListener('click',e=>{const card=e.target.closest('.gallery-v9-card');if(!card||!modal||!preview)return;preview.src=card.dataset.photo;preview.alt=card.dataset.title;if(caption)caption.textContent=card.dataset.title;modal.showModal?.();});
+    $$('.gallery-filter').forEach(btn=>btn.addEventListener('click',()=>{
+      $$('.gallery-filter').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');render(btn.dataset.filter||'All');
+    }));
+    grid.addEventListener('click',e=>{
+      const card=e.target.closest('.gallery-v9-card');
+      if(!card||!modal||!preview)return;
+      const item=photos[Number(card.dataset.galleryIndex)];
+      if(!item)return;
+      activeTrigger=card;
+      preview.src=item.image;preview.alt=item.title;
+      if(caption)caption.textContent=item.title;
+      if(description)description.textContent=item.description;
+      if(meta)meta.textContent=item.category+(item.year?' · '+item.year:'');
+      if(roleText){
+        roleText.textContent=item.role||'';
+        roleText.hidden=!item.role;
+      }
+      if(!modal.open)modal.showModal();
+    });
     $('#gallery-v9-close')?.addEventListener('click',()=>modal?.close());
-    modal?.addEventListener('click',e=>{if(e.target===modal)modal.close()});
+    modal?.addEventListener('click',e=>{if(e.target===modal)modal.close();});
+    modal?.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.open){e.preventDefault();modal.close();}});
+    modal?.addEventListener('close',()=>{activeTrigger?.focus({preventScroll:true});});
   }
   function leadership(){
     const target=$('#leadership-v9-timeline');if(!target)return;

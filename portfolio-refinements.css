@@ -118,3 +118,87 @@ body[data-page="publication-detail"] .detail-body .related .btn{margin-top:5px}
   body[data-page="publication-detail"] .detail-shell{gap:20px}
   body[data-page="publication-detail"] .detail-body h2{font-size:1.22rem}
 }
+
+
+/* Gallery popup with metadata and concise, grounded descriptions — 17 Nov 2026 */
+body[data-page="gallery"] .portfolio-modal{
+  width:min(820px,calc(100vw - 28px));
+  max-height:min(92dvh,980px);
+  padding:0;
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:var(--panel);
+  color:var(--text);
+  box-shadow:0 28px 100px rgba(14,18,45,.32);
+}
+body[data-page="gallery"] .gallery-modal-top{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px 18px 11px;
+}
+body[data-page="gallery"] .gallery-modal-top-label{
+  font:700 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+}
+body[data-page="gallery"] .modal-close-v9{
+  float:none;flex:none;margin:0;
+  display:grid;place-items:center;width:38px;height:38px;
+  padding:0;border:1px solid var(--line);border-radius:11px;
+  color:var(--text);background:var(--panel2);font-size:1.55rem;line-height:1;
+  cursor:pointer;
+}
+body[data-page="gallery"] .modal-close-v9:hover,
+body[data-page="gallery"] .modal-close-v9:focus-visible{
+  color:var(--accent);border-color:var(--accent2);outline-offset:3px;
+}
+body[data-page="gallery"] .gallery-modal-image{
+  margin:0 18px;border-radius:13px;overflow:hidden;
+  background:var(--bg2);
+}
+body[data-page="gallery"] .gallery-modal-image img{
+  width:100%;height:auto;max-height:min(56dvh,550px);object-fit:contain;
+  display:block;margin:0 auto;border-radius:0;
+}
+body[data-page="gallery"] .gallery-modal-content{padding:17px 22px 25px}
+body[data-page="gallery"] .gallery-modal-meta{
+  font:700 .71rem var(--mono);color:var(--accent);
+  letter-spacing:.02em;margin-bottom:8px;
+}
+body[data-page="gallery"] .gallery-modal-content h2{
+  font:700 clamp(1.22rem,2.35vw,1.7rem)/1.25 var(--display);
+  letter-spacing:-.025em;color:var(--text);
+  margin:0 0 9px;
+}
+body[data-page="gallery"] .gallery-modal-role{
+  font-size:.79rem;font-weight:650;color:var(--accent3);
+  margin:0 0 8px;
+}
+body[data-page="gallery"] .gallery-modal-description{
+  font:400 .94rem/1.63 var(--body);color:var(--muted);
+  max-width:720px;margin:0;
+}
+body[data-page="gallery"] .gallery-v9-card:focus-visible{
+  outline:3px solid var(--accent2);outline-offset:3px;
+}
+/* The three Home highlights remain; detailed role histories live in the timeline. */
+body[data-page="home"] #leadership-grid>.media-card{display:flex;flex-direction:column;min-width:0}
+body[data-page="home"] #leadership-grid>.media-card img{
+  width:100%;aspect-ratio:16/8.5;object-fit:cover;
+}
+body[data-page="home"] #leadership-grid>.media-card .body{
+  padding:17px 19px 19px;flex:1;
+}
+body[data-page="home"] #leadership-grid>.media-card .body>p:nth-of-type(n+2){display:none!important}
+body[data-page="home"] #leadership-grid>.media-card .body>p:first-of-type{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
+  line-clamp:3;overflow:hidden;
+  font-size:.83rem;line-height:1.55;margin-bottom:0;
+}
+body[data-page="home"] #leadership-grid>.media-card h3{font-size:1.05rem;line-height:1.32}
+@media(max-width:650px){
+  body[data-page="gallery"] .portfolio-modal{width:calc(100vw - 18px);max-height:92dvh;border-radius:17px}
+  body[data-page="gallery"] .gallery-modal-top{padding:10px 12px}
+  body[data-page="gallery"] .gallery-modal-image{margin:0 12px}
+  body[data-page="gallery"] .gallery-modal-image img{max-height:52dvh}
+  body[data-page="gallery"] .gallery-modal-content{padding:15px 16px 20px}
+  body[data-page="gallery"] .gallery-modal-description{font-size:.88rem}
+}
