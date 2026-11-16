@@ -600,3 +600,154 @@ const PORTFOLIO_DATA = {
 };
 
 window.PORTFOLIO_DATA = PORTFOLIO_DATA;
+
+/* PORTFOLIO_VIDEO_CORRECTIONS_2026: source-backed research updates; originals preserved. */
+(()=>{
+  const d=window.PORTFOLIO_DATA;
+  const papers=[
+  {
+    "status": "Conditionally Accepted",
+    "year": "2026",
+    "type": "BAUET Journal Article",
+    "title": "Osteosarcoma Histopathological Image Classification Using a Lightweight Deep Convolutional Neural Network Approach",
+    "venue": "BAUET Journal, Vol. 06, Issue 01 (2026) — conditional acceptance 12 November 2026",
+    "authors": "Subrata Kumer Paul; Dewan Nafiul Islam Noor; Rakhi Rani Paul; Md. Ekramul Hamid",
+    "role": "Second author; manuscript conditionally accepted, final publication pending.",
+    "summary": "Lightweight custom CNN for three-class osteosarcoma histopathological image classification compared with six transfer-learning models; reported test accuracy 95.63%. External validation is needed.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "Medical AI",
+      "Histopathology",
+      "Osteosarcoma",
+      "CNN"
+    ]
+  },
+  {
+    "status": "Accepted — Presentation Upcoming",
+    "year": "2026",
+    "type": "ICRPSET 2026 Conference Paper",
+    "title": "MedTrustScore: A Reliability-Aware Framework for Evaluating Trustworthy Medical Deep Learning Models",
+    "venue": "ICRPSET 2026 · Paper ID 243 · Presentation upcoming",
+    "authors": "Subrata Paul; Dewan Nafiul Islam Noor; Nasim Ahmed; Rakhi Rani Paul; Abu Saleh Musa Miah; Md. Ekramul Hamid",
+    "role": "Second author; accepted, presentation and proceedings pending.",
+    "summary": "Reliability-aware medical deep-learning evaluation addressing model uncertainty, data leakage, calibration and domain shift.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "Trustworthy AI",
+      "Medical AI",
+      "Model Reliability"
+    ]
+  },
+  {
+    "status": "Accepted — Presentation Upcoming",
+    "year": "2026",
+    "type": "ICRPSET 2026 Conference Paper",
+    "title": "SmartStick-YOLO: A Multimodal Assistive Cane Fusing Edge-AI Obstacle Detection and Spatial Telemetry for the Visually Impaired",
+    "venue": "ICRPSET 2026 · Paper ID 267 · Presentation upcoming",
+    "authors": "Md Rafiqul Islam (Rafiq); Kotha Das Puja; Aurpa Saha; Shadman Ahmed; Nasim Ahmed; Dewan Nafiul Islam Noor; Subrata Paul",
+    "role": "Sixth author; accepted, presentation and proceedings pending.",
+    "summary": "Assistive navigation cane integrating edge-AI object detection, ultrasonic ranging, GPS/GSM telemetry and emergency alerts.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "YOLO",
+      "Edge AI",
+      "Assistive Technology"
+    ]
+  },
+  {
+    "status": "Accepted — Presentation Upcoming",
+    "year": "2026",
+    "type": "ICRPSET 2026 Conference Paper",
+    "title": "Cross-Domain Action Recognition Under Synthetic Low-Light and Infrared-Like Degradation: A Comparative Benchmark of Spatio-Temporal Transformers and Recurrent Baselines",
+    "venue": "ICRPSET 2026 · Paper ID 295 · Presentation upcoming",
+    "authors": "Dewan Nafiul Islam Noor; Nasim Ahmed; Rakhi Rani Paul; Subrata Paul",
+    "role": "First author; accepted, presentation and proceedings pending.",
+    "summary": "Benchmark of CNN-LSTM, EfficientNet-BiGRU, Swin3D-T and MViT-V2-S on original RGB, synthetic low-light and infrared-like HMDB51 video domains.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "Human Activity Recognition",
+      "HMDB51",
+      "Low-Light",
+      "Transformers"
+    ]
+  },
+  {
+    "status": "Accepted — Presentation Upcoming",
+    "year": "2026",
+    "type": "ICRPSET 2026 Conference Paper",
+    "title": "A Computationally Efficient Hybrid LSTM-MobileNetV2 Architecture for Detecting ASD from Facial Image: A Benchmark Study",
+    "venue": "ICRPSET 2026 · Paper ID 326 · Presentation upcoming",
+    "authors": "Subrata Paul; Md. Shamimul Haque; Md. Mustafizur Rahman Sarkar; Nasim Ahmed; Dewan Nafiul Islam Noor; Md. Ekramul Hamid",
+    "role": "Fifth author; accepted, presentation and proceedings pending.",
+    "summary": "Efficient MobileNetV2-LSTM facial image benchmark for ASD-related image classification; not clinically validated for diagnosis.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "ASD",
+      "MobileNetV2",
+      "LSTM",
+      "Healthcare AI"
+    ]
+  },
+  {
+    "status": "Accepted — Presentation Upcoming",
+    "year": "2026",
+    "type": "ICRPSET 2026 Conference Paper",
+    "title": "WebGaze-ASD: A Low-Cost, Real-Time Multimodal Webcam-Based Eye-Tracking Data Collection System for ASD and TD Child",
+    "venue": "ICRPSET 2026 · Paper ID 328 · Presentation upcoming",
+    "authors": "Subrata Paul; Dewan Nafiul Islam Noor; Nasim Ahmed; Rakhi Rani Paul; Abu Saleh Musa Miah; Md. Ekramul Hamid",
+    "role": "Second author; accepted, presentation and proceedings pending.",
+    "summary": "Low-cost webcam-based acquisition of gaze, blink, pupil, head pose and other measures in ASD and typically developing children; validation is future work.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "ASD",
+      "Eye Tracking",
+      "Webcam",
+      "Data Collection"
+    ]
+  },
+  {
+    "status": "Accepted — Presentation Upcoming",
+    "year": "2026",
+    "type": "ICRPSET 2026 Conference Paper",
+    "title": "Systematic Data Auditing and Multi-Output Surrogate Modeling of Heat Exchangers Using Ensemble Learning",
+    "venue": "ICRPSET 2026 · Paper ID 546 · Presentation upcoming",
+    "authors": "Subrata Paul; Dewan Nafiul Islam Noor; Nasim Ahmed; Zannatun Nayeem",
+    "role": "Second author; accepted, presentation and proceedings pending.",
+    "summary": "Leakage-aware data auditing and ensemble/multi-task learning for multi-output heat exchanger surrogate modeling.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "Ensemble Learning",
+      "Data Auditing",
+      "Heat Exchanger"
+    ]
+  },
+  {
+    "status": "Accepted — Presentation Upcoming",
+    "year": "2026",
+    "type": "ICMIME 2026 Conference Paper",
+    "title": "ThermoFlow-MTL: A Multi-Task Learning Surrogate for Thermo-Hydraulic Optimization in Porous Wavy Channels",
+    "venue": "7th ICMIME 2026 · Paper ID 306 · Presentation upcoming",
+    "authors": "Subrata Paul; Nasim Ahmed; Zannatun Nayeem; Dewan Nafiul Islam Noor; Rakhi Rani Paul",
+    "role": "Fourth author; accepted, presentation and proceedings pending.",
+    "summary": "Multi-task learning surrogate for fast thermo-hydraulic prediction and Pareto optimization of partially porous wavy channels.",
+    "doi": "",
+    "github": "",
+    "tags": [
+      "Multi-Task Learning",
+      "Thermal Engineering",
+      "Optimization"
+    ]
+  }
+];
+  const existing=new Set(d.publications.map(p=>p.title.trim().toLowerCase()));
+  d.publications.splice(3,0,...papers.filter(p=>!existing.has(p.title.trim().toLowerCase())));
+  d.hero.highlights=[{value:"3",label:"Published papers"},{value:"7",label:"Accepted conference papers"},{value:"3.86",label:"B.Sc. CGPA / 4.00"}];
+  d.education=d.education.filter(e=>!/secondary school certificate\s*\(ssc\)/i.test(e.degree));
+})();
